@@ -1,0 +1,100 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum SubscriptionStatus {
+  INACTIVE
+  ACTIVE
+}
+
+model User {
+  id               String         @id @default(cuid())
+  name             String?
+  email            String?        @unique
+  password         String?
+  image            String?
+  role             Role           @default(USER)
+  stripeCustomerId String?        @unique
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  progress         UserProgress[]
+  subscriptions    Subscription[]
+}
+
+model Course {
+  id          String    @id @default(cuid())
+  title       String
+  description String?   @db.Text
+  imageUrl    String?
+  category    String?
+  isPublished Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  chapters    Chapter[]
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  position    Int
+  isPublished Boolean  @default(false)
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Lesson {
+  id          String         @id @default(cuid())
+  title       String
+  description String?        @db.Text
+  videoUrl    String?        // Full drive link or raw link
+  position    Int
+  isPublished Boolean        @default(false)
+  duration    String?        // Duration string, e.g. "10:30" or "05:15"
+  chapterId   String
+  chapter     Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  progress    UserProgress[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model UserProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+}
+
+model Subscription {
+  id                     String             @id @default(cuid())
+  userId                 String
+  user                   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status                 SubscriptionStatus @default(INACTIVE)
+  stripeSubscriptionId   String?            @unique
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+  startDate              DateTime           @default(now())
+  endDate                DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+
+  @@index([userId, status])
+}

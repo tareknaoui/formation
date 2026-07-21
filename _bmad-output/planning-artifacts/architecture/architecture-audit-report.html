@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rapport d'Audit Architectural - Formation Mandarin</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --critical: #ef4444;
+      --high: #f97316;
+      --medium: #eab308;
+      --low: #3b82f6;
+      --success: #22c55e;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 2.25rem;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-pass { background-color: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
+    .badge-warning { background-color: rgba(249, 115, 22, 0.2); color: var(--high); border: 1px solid var(--high); }
+    .badge-critical { background-color: rgba(239, 68, 68, 0.2); color: var(--critical); border: 1px solid var(--critical); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--accent);
+    }
+    .finding-item {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left-width: 4px;
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .finding-critical { border-left-color: var(--critical); }
+    .finding-high { border-left-color: var(--high); }
+    .finding-medium { border-left-color: var(--medium); }
+    .finding-low { border-left-color: var(--low); }
+    .finding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .finding-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .code-block {
+      background-color: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      padding: 0.75rem 1rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      overflow-x: auto;
+    }
+    ul { padding-left: 1.25rem; }
+    li { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1>Rapport d'Audit Architectural BMad</h1>
+        <span class="badge badge-warning">Action Requise (4 Alertes)</span>
+      </div>
+      <p style="color: var(--text-muted);">Projet: <strong>Formation Mandarin</strong> | Date: 21 Juillet 2026 | Mode: <code>bmad-architecture validate</code></p>
+    </header>
+
+    <div class="card" style="margin-bottom: 2rem;">
+      <h3>Verdict Architectural global</h3>
+      <p>L'architecture de base du projet est <strong>saine et bien structurée</strong> (Next.js 16 App Router, Prisma 7, NextAuth avec RBAC), mais présente des <strong>risques majeurs de performance et de scalabilité</strong> en production, notamment autour de la gestion des requêtes SQL dans NextAuth, la connexion PostgreSQL en Serverless et la gestion du modèle d'abonnement.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Pile Technologique</h3>
+        <ul>
+          <li><strong>Framework:</strong> Next.js 16.2 (App Router) + React 19</li>
+          <li><strong>Base de données:</strong> PostgreSQL + Prisma 7.8 (Adapter PG)</li>
+          <li><strong>Auth:</strong> NextAuth 4.24 (Credentials + JWT)</li>
+          <li><strong>Styles:</strong> Tailwind CSS v4</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Synthèse des Réseaux / Audit</h3>
+        <ul>
+          <li><strong style="color: var(--critical);">1 Critique:</strong> Requêtes BDD N+1 répétitives dans le JWT NextAuth</li>
+          <li><strong style="color: var(--high);">2 Élevés:</strong> Non-optimisation du Pool `pg` et Modèle Subscription incomplet</li>
+          <li><strong style="color: var(--medium);">1 Moyen:</strong> Gestion du streaming vidéo (`videoUrl`)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Détail des Constats Architecturales (Reviewer Gate)</h2>
+
+    <div class="finding-item finding-critical">
+      <div class="finding-header">
+        <span class="finding-title">[CRITIQUE] Surcharge BDD dans le callback JWT NextAuth</span>
+        <span class="badge badge-critical">CRITIQUE</span>
+      </div>
+      <p><strong>Fichier:</strong> <code>src/lib/auth.ts</code> (Lignes 67-85)</p>
+      <p><strong>Description:</strong> À chaque vérification du token JWT (ex: à chaque requête interceptée par le middleware), le callback <code>jwt()</code> effectue des requêtes BDD synchrones (<code>db.subscription.findFirst</code> et <code>db.user.findUnique</code>). Cela génère une surcharge massive de la base de données et ralentit les temps de réponse de l'application.</p>
+      <div class="code-block">
+// Problème dans src/lib/auth.ts:
+const activeSub = await db.subscription.findFirst({ where: { userId: token.id, status: "ACTIVE" } });
+      </div>
+      <p><strong>Recommandation:</strong> Mettre en cache l'état dans le jeton JWT lors du login et rafraîchir l'état uniquement sur appel explicite (via <code>useSession().update()</code> ou webhook de paiement) au lieu d'interroger la BDD à chaque passe du token.</p>
+    </div>
+
+    <div class="finding-item finding-high">
+      <div class="finding-header">
+        <span class="finding-title">[ÉLEVÉ] Configuration du Pool PostgreSQL (`pg` + Prisma Adapter)</span>
+        <span class="badge badge-warning">ÉLEVÉ</span>
+      </div>
+      <p><strong>Fichier:</strong> <code>src/lib/db.ts</code> (Lignes 12-20)</p>
+      <p><strong>Description:</strong> Le client Prisma utilise <code>new Pool({ connectionString })</code> sans spécifier de limite maximale de connexions (<code>max</code>). En environnement serverless (Next.js / Vercel), chaque instance va créer son propre pool, risquant de dépasser rapidement la limite de connexions de la base PostgreSQL (ex: Supabase, Neon).</p>
+      <p><strong>Recommandation:</strong> Définir les limites de connexions dans <code>new Pool({ connectionString, max: process.env.NODE_ENV === "production" ? 5 : 2 })</code> ou utiliser un Transaction Pooler (PgBouncer/Supabase Pooler).</p>
+    </div>
+
+    <div class="finding-item finding-high">
+      <div class="finding-header">
+        <span class="finding-title">[ÉLEVÉ] Modèle `Subscription` incomplet pour la facturation SaaS</span>
+        <span class="badge badge-warning">ÉLEVÉ</span>
+      </div>
+      <p><strong>Fichier:</strong> <code>prisma/schema.prisma</code> (Lignes 85-94)</p>
+      <p><strong>Description:</strong> Le modèle <code>Subscription</code> actuel manque des champs clés nécessaires à l'intégration d'une passerelle de paiement (Stripe, LemonSqueezy) comme <code>stripeCustomerId</code>, <code>stripeSubscriptionId</code>, <code>stripePriceId</code>, <code>currentPeriodEnd</code>.</p>
+      <p><strong>Recommandation:</strong> Enrichir le schéma Prisma avec les identifiants du fournisseur de paiement et créer un webhook pour mettre à jour automatiquement le statut d'abonnement.</p>
+    </div>
+
+    <div class="finding-item finding-medium">
+      <div class="finding-header">
+        <span class="finding-title">[MOYEN] Stratégie de Streaming Vidéo (`videoUrl`)</span>
+        <span class="badge" style="background: rgba(234, 179, 8, 0.2); color: var(--medium); border: 1px solid var(--medium);">MOYEN</span>
+      </div>
+      <p><strong>Fichier:</strong> <code>prisma/schema.prisma</code> (Ligne 61)</p>
+      <p><strong>Description:</strong> Les leçons utilisent des liens bruts ou des liens Google Drive dans <code>videoUrl</code>. Cela pose des problèmes de sécurité (téléchargement facile), d'expérience utilisateur (pas de qualité adaptative HLS/DASH) et de quotas de lecture.</p>
+      <p><strong>Recommandation:</strong> Utiliser un lecteur dédié avec un hébergeur vidéo professionnel (Mux, Bunny Stream, Cloudflare Stream ou Vimeo Pro) et stocker un `playbackId` / `videoId` plutôt qu'une URL brute.</p>
+    </div>
+
+    <h2>Prochaines Étapes Recommandées</h2>
+    <ul>
+      <li>Créer une <strong>épine architecturale officielle (ARCHITECTURE-SPINE.md)</strong> via <code>/bmad-architecture create</code> pour fixer ces invariants.</li>
+      <li>Optimiser la couche d'authentification et de session dans <code>src/lib/auth.ts</code>.</li>
+      <li>Compléter le modèle Prisma et la gestion des abonnements Stripe.</li>
+    </ul>
+  </div>
+</body>
+</html>
