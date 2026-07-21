@@ -314,7 +314,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                   type="text"
                   value={courseForm.title}
                   onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })}
-                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                 />
               </div>
 
@@ -325,7 +325,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                   value={courseForm.description}
                   onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })}
                   rows={3}
-                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                 />
               </div>
 
@@ -335,7 +335,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                 <select
                   value={courseForm.category}
                   onChange={(e) => setCourseForm({ ...courseForm, category: e.target.value })}
-                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 >
                   <option value="Débutant">Débutant</option>
                   <option value="Intermédiaire">Intermédiaire</option>
@@ -351,7 +351,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                   type="text"
                   value={courseForm.imageUrl}
                   onChange={(e) => setCourseForm({ ...courseForm, imageUrl: e.target.value })}
-                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                 />
               </div>
 
@@ -521,7 +521,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                   placeholder="Ex: Les Salutations de Base"
                   value={chapterForm.title}
                   onChange={(e) => setChapterForm({ ...chapterForm, title: e.target.value })}
-                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50/50"
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                 />
               </div>
 
@@ -532,7 +532,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                   value={chapterForm.description}
                   onChange={(e) => setChapterForm({ ...chapterForm, description: e.target.value })}
                   rows={3}
-                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50/50"
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                 />
               </div>
 
@@ -568,7 +568,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                   placeholder="Ex: Dire bonjour : Nǐ Hǎo !"
                   value={lessonForm.title}
                   onChange={(e) => setLessonForm({ ...lessonForm, title: e.target.value })}
-                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50/50"
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                 />
               </div>
 
@@ -579,7 +579,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                   value={lessonForm.description}
                   onChange={(e) => setLessonForm({ ...lessonForm, description: e.target.value })}
                   rows={2}
-                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50/50"
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                 />
               </div>
 
@@ -591,7 +591,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                     placeholder="Ex: 06:15"
                     value={lessonForm.duration}
                     onChange={(e) => setLessonForm({ ...lessonForm, duration: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50/50"
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                   />
                 </div>
 
@@ -607,7 +607,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                     placeholder="Coller le lien de la vidéo"
                     value={lessonForm.videoUrl}
                     onChange={(e) => setLessonForm({ ...lessonForm, videoUrl: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none bg-slate-50/50"
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder-slate-400"
                   />
                 </div>
               </div>
