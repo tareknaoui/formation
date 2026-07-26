@@ -24,13 +24,9 @@ const getClient = () => {
   return new PrismaClient({ adapter });
 };
 
-if (process.env.NODE_ENV === "production") {
-  prisma = getClient();
-} else {
-  if (!global.prisma) {
-    global.prisma = getClient();
-  }
-  prisma = global.prisma;
+if (!global.prisma) {
+  global.prisma = getClient();
 }
+prisma = global.prisma;
 
 export const db = prisma;

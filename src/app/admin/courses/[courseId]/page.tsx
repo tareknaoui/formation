@@ -95,8 +95,8 @@ export default async function AdminCourseDetailPage({ params }: CourseEditPagePr
 
   return (
     <CourseManagerClient
-      course={mappedCourse}
-      chapters={mappedChapters}
+      course={JSON.parse(JSON.stringify(mappedCourse))}
+      chapters={JSON.parse(JSON.stringify(mappedChapters))}
     />
   );
 }

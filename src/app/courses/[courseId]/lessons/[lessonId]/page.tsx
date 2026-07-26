@@ -137,15 +137,15 @@ export default async function LessonPage({ params }: LessonPageProps) {
     <LessonPlayerClient
       courseId={courseId}
       courseTitle={course.title}
-      lesson={{
+      lesson={JSON.parse(JSON.stringify({
         id: currentLesson.id,
         title: currentLesson.title,
         description: currentLesson.description,
         videoUrl: currentLesson.videoUrl,
         position: currentLesson.position,
-      }}
-      quiz={quiz}
-      chapters={sidebarChapters}
+      }))}
+      quiz={quiz ? JSON.parse(JSON.stringify(quiz)) : null}
+      chapters={JSON.parse(JSON.stringify(sidebarChapters))}
       initialCompletedLessonIds={completedLessonIds}
       isSubscribed={isSubscribed}
       prevLessonId={prevLessonId}
