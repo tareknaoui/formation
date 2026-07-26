@@ -66,10 +66,20 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const rawQuiz = currentLesson.quizzes[0] || null;
   const quiz = rawQuiz
     ? {
-        ...rawQuiz,
-        questions: rawQuiz.questions.map((q) => ({
-          ...q,
-          options: q.options.map(({ isCorrect, ...opt }) => opt),
+        id: rawQuiz.id,
+        title: rawQuiz.title,
+        description: rawQuiz.description,
+        passingScore: rawQuiz.passingScore,
+        questions: (rawQuiz.questions || []).map((q) => ({
+          id: q.id,
+          prompt: q.prompt,
+          hanzi: q.hanzi,
+          pinyin: q.pinyin,
+          explanation: q.explanation,
+          options: (q.options || []).map((opt) => ({
+            id: opt.id,
+            text: opt.text,
+          })),
         })),
       }
     : null;

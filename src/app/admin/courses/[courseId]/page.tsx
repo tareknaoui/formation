@@ -70,7 +70,26 @@ export default async function AdminCourseDetailPage({ params }: CourseEditPagePr
       position: lesson.position,
       duration: lesson.duration,
       isPublished: lesson.isPublished,
-      quizzes: lesson.quizzes,
+      quizzes: (lesson.quizzes || []).map((q) => ({
+        id: q.id,
+        title: q.title,
+        description: q.description,
+        passingScore: q.passingScore,
+        lessonId: q.lessonId,
+        questions: (q.questions || []).map((quest) => ({
+          id: quest.id,
+          prompt: quest.prompt,
+          hanzi: quest.hanzi,
+          pinyin: quest.pinyin,
+          explanation: quest.explanation,
+          position: quest.position,
+          options: (quest.options || []).map((opt) => ({
+            id: opt.id,
+            text: opt.text,
+            isCorrect: opt.isCorrect,
+          })),
+        })),
+      })),
     })),
   }));
 
