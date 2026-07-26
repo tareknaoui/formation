@@ -25,6 +25,16 @@ export default async function AdminCourseDetailPage({ params }: CourseEditPagePr
         include: {
           lessons: {
             orderBy: { position: "asc" },
+            include: {
+              quizzes: {
+                include: {
+                  questions: {
+                    include: { options: true },
+                    orderBy: { position: "asc" },
+                  },
+                },
+              },
+            },
           },
         },
         orderBy: { position: "asc" },
@@ -60,6 +70,7 @@ export default async function AdminCourseDetailPage({ params }: CourseEditPagePr
       position: lesson.position,
       duration: lesson.duration,
       isPublished: lesson.isPublished,
+      quizzes: lesson.quizzes,
     })),
   }));
 
