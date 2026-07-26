@@ -6,7 +6,6 @@ import { CheckCircle2, XCircle, Award, HelpCircle, ArrowRight, RotateCcw, Sparkl
 export interface QuizOptionData {
   id: string;
   text: string;
-  isCorrect?: boolean;
 }
 
 export interface QuizQuestionData {
@@ -41,6 +40,13 @@ export default function QuizComponent({ quiz, onComplete }: QuizComponentProps) 
     passed: boolean;
     correctCount: number;
     totalQuestions: number;
+    corrections?: {
+      questionId: string;
+      selectedOptionId: string | null;
+      correctOptionId: string | null;
+      correctOptionText: string | null;
+      isCorrect: boolean;
+    }[];
   } | null>(null);
 
   const questions = quiz.questions;
@@ -112,6 +118,8 @@ export default function QuizComponent({ quiz, onComplete }: QuizComponentProps) 
 
   // Result view after submission
   if (isSubmitted && result) {
+    const corrections = result.corrections || [];
+
     return (
       <div className="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm text-center space-y-6 animate-fadeIn">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-50 border border-slate-100 shadow-inner">
@@ -145,10 +153,10 @@ export default function QuizComponent({ quiz, onComplete }: QuizComponentProps) 
         <div className="text-left space-y-4 pt-4 border-t border-slate-100">
           <h4 className="font-bold text-slate-800 text-sm">Récapitulatif des réponses :</h4>
           {questions.map((q, idx) => {
+            const correction = corrections.find((c) => c.questionId === q.id);
             const selectedOptId = userAnswers[q.id];
-            const selectedOpt = q.options.find((o) => o.id === selectedOptId);
-            const correctOpt = q.options.find((o) => o.isCorrect);
-            const isCorrect = selectedOptId === correctOpt?.id;
+            const selectedOpt = q.options?.find((o) => o.id === selectedOptId);
+            const isCorrect = correction?.isCorrect ?? false;
 
             return (
               <div key={q.id} className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/50 space-y-2 text-xs">
@@ -176,10 +184,10 @@ export default function QuizComponent({ quiz, onComplete }: QuizComponentProps) 
                   </span>
                 </div>
 
-                {!isCorrect && correctOpt && (
+                {!isCorrect && correction?.correctOptionText && (
                   <div className="text-slate-600">
                     <span>Bonne réponse : </span>
-                    <span className="font-bold text-emerald-600">{correctOpt.text}</span>
+                    <span className="font-bold text-emerald-600">{correction.correctOptionText}</span>
                   </div>
                 )}
 
@@ -202,6 +210,10 @@ export default function QuizComponent({ quiz, onComplete }: QuizComponentProps) 
         </button>
       </div>
     );
+  }
+
+  if (!currentQuestion) {
+    return null;
   }
 
   const isSelected = (optId: string) => userAnswers[currentQuestion.id] === optId;

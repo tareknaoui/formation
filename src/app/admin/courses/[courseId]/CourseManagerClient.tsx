@@ -17,6 +17,7 @@ interface Lesson {
   position: number;
   duration: string | null;
   isPublished: boolean;
+  quizzes?: any[];
 }
 
 interface Chapter {
@@ -293,24 +294,65 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
   // Quiz Modal handlers
   const openQuizModal = (lesson: Lesson) => {
     setActiveQuizLessonId(lesson.id);
-    setQuizForm({
-      title: `Quizz : ${lesson.title}`,
-      description: "Testez votre niveau sur les notions abordées dans cette leçon.",
-      passingScore: 70,
-      questions: [
-        {
-          prompt: "Quelle est la traduction exacte ?",
-          hanzi: "你好",
-          pinyin: "nǐ hǎo",
-          explanation: "你好 (nǐ hǎo) est la salutation standard.",
-          options: [
-            { text: "Bonjour", isCorrect: true },
-            { text: "Au revoir", isCorrect: false },
-            { text: "Merci", isCorrect: false },
-          ],
-        },
-      ],
-    });
+    const existingQuiz = lesson.quizzes && lesson.quizzes.length > 0 ? lesson.quizzes[0] : null;
+
+    if (existingQuiz) {
+      setQuizForm({
+        id: existingQuiz.id,
+        title: existingQuiz.title || `Quizz : ${lesson.title}`,
+        description: existingQuiz.description || "Testez votre niveau sur les notions abordées dans cette leçon.",
+        passingScore: typeof existingQuiz.passingScore === "number" ? existingQuiz.passingScore : 70,
+        questions: Array.isArray(existingQuiz.questions) && existingQuiz.questions.length > 0
+          ? existingQuiz.questions.map((q: any) => ({
+              prompt: q.prompt || "",
+              hanzi: q.hanzi || "",
+              pinyin: q.pinyin || "",
+              explanation: q.explanation || "",
+              options: Array.isArray(q.options)
+                ? q.options.map((opt: any) => ({
+                    text: opt.text || "",
+                    isCorrect: !!opt.isCorrect,
+                  }))
+                : [
+                    { text: "Option 1", isCorrect: true },
+                    { text: "Option 2", isCorrect: false },
+                  ],
+            }))
+          : [
+              {
+                prompt: "Quelle est la traduction exacte ?",
+                hanzi: "你好",
+                pinyin: "nǐ hǎo",
+                explanation: "你好 (nǐ hǎo) est la salutation standard.",
+                options: [
+                  { text: "Bonjour", isCorrect: true },
+                  { text: "Au revoir", isCorrect: false },
+                  { text: "Merci", isCorrect: false },
+                ],
+              },
+            ],
+      });
+    } else {
+      setQuizForm({
+        id: undefined,
+        title: `Quizz : ${lesson.title}`,
+        description: "Testez votre niveau sur les notions abordées dans cette leçon.",
+        passingScore: 70,
+        questions: [
+          {
+            prompt: "Quelle est la traduction exacte ?",
+            hanzi: "你好",
+            pinyin: "nǐ hǎo",
+            explanation: "你好 (nǐ hǎo) est la salutation standard.",
+            options: [
+              { text: "Bonjour", isCorrect: true },
+              { text: "Au revoir", isCorrect: false },
+              { text: "Merci", isCorrect: false },
+            ],
+          },
+        ],
+      });
+    }
     setQuizModalOpen(true);
   };
 
@@ -354,14 +396,25 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
       });
 
       if (res.ok) {
+        const savedQuiz = await res.json();
+        setChapters((prevChapters) =>
+          prevChapters.map((c) => ({
+            ...c,
+            lessons: c.lessons.map((l) =>
+              l.id === activeQuizLessonId ? { ...l, quizzes: [savedQuiz] } : l
+            ),
+          }))
+        );
         alert("Quizz sauvegardé avec succès !");
         setQuizModalOpen(false);
         router.refresh();
       } else {
-        alert("Erreur lors de la sauvegarde du quizz.");
+        const errorText = await res.text().catch(() => "");
+        alert(`Erreur lors de la sauvegarde du quizz : ${errorText || "Erreur serveur"}`);
       }
     } catch (err) {
       console.error("[SAVE_QUIZ_ERROR]", err);
+      alert("Une erreur est survenue lors de la sauvegarde.");
     } finally {
       setIsSavingQuiz(false);
     }

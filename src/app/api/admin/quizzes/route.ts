@@ -38,42 +38,59 @@ export async function POST(req: Request) {
       return new NextResponse("Titre et lessonId sont requis.", { status: 400 });
     }
 
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return new NextResponse("Le quizz doit contenir au moins une question valide.", { status: 400 });
+    }
+
+    const lessonExists = await db.lesson.findUnique({
+      where: { id: lessonId },
+    });
+
+    if (!lessonExists) {
+      return new NextResponse("La leçon spécifiée n'existe pas.", { status: 404 });
+    }
+
+    const validPassingScore = Math.min(100, Math.max(0, typeof passingScore === "number" ? passingScore : 70));
+
     // If updating an existing quiz
     if (id) {
-      // Delete existing questions & options, then recreate
-      await db.quizQuestion.deleteMany({
-        where: { quizId: id },
-      });
+      const updatedQuiz = await db.$transaction(async (tx) => {
+        // Delete existing questions & options, then recreate
+        await tx.quizQuestion.deleteMany({
+          where: { quizId: id },
+        });
 
-      const updatedQuiz = await db.quiz.update({
-        where: { id },
-        data: {
-          title,
-          description,
-          passingScore: passingScore ?? 70,
-          questions: {
-            create: questions.map((q, qIndex) => ({
-              prompt: q.prompt,
-              hanzi: q.hanzi,
-              pinyin: q.pinyin,
-              explanation: q.explanation,
-              position: qIndex + 1,
-              options: {
-                create: q.options.map((opt) => ({
-                  text: opt.text,
-                  isCorrect: opt.isCorrect,
-                })),
-              },
-            })),
-          },
-        },
-        include: {
-          questions: {
-            include: {
-              options: true,
+        return await tx.quiz.update({
+          where: { id },
+          data: {
+            title,
+            description,
+            passingScore: validPassingScore,
+            lessonId,
+            questions: {
+              create: questions.map((q, qIndex) => ({
+                prompt: q.prompt,
+                hanzi: q.hanzi,
+                pinyin: q.pinyin,
+                explanation: q.explanation,
+                position: qIndex + 1,
+                options: {
+                  create: (q.options || []).map((opt) => ({
+                    text: opt.text,
+                    isCorrect: !!opt.isCorrect,
+                  })),
+                },
+              })),
             },
           },
-        },
+          include: {
+            questions: {
+              include: {
+                options: true,
+              },
+            },
+          },
+        });
       });
 
       return NextResponse.json(updatedQuiz);
@@ -84,7 +101,7 @@ export async function POST(req: Request) {
       data: {
         title,
         description,
-        passingScore: passingScore ?? 70,
+        passingScore: validPassingScore,
         lessonId,
         questions: {
           create: questions.map((q, qIndex) => ({
@@ -94,9 +111,9 @@ export async function POST(req: Request) {
             explanation: q.explanation,
             position: qIndex + 1,
             options: {
-              create: q.options.map((opt) => ({
+              create: (q.options || []).map((opt) => ({
                 text: opt.text,
-                isCorrect: opt.isCorrect,
+                isCorrect: !!opt.isCorrect,
               })),
             },
           })),

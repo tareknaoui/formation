@@ -62,7 +62,17 @@ export default async function LessonPage({ params }: LessonPageProps) {
     redirect(`/courses/${courseId}`);
   }
 
-  const quiz = currentLesson.quizzes[0] || null;
+  // Strip isCorrect from options before sending to client to prevent answer cheating
+  const rawQuiz = currentLesson.quizzes[0] || null;
+  const quiz = rawQuiz
+    ? {
+        ...rawQuiz,
+        questions: rawQuiz.questions.map((q) => ({
+          ...q,
+          options: q.options.map(({ isCorrect, ...opt }) => opt),
+        })),
+      }
+    : null;
 
   // Double check that the lesson belongs to this course
   const lessonChapter = course.chapters.find((ch) => ch.id === currentLesson.chapterId);
