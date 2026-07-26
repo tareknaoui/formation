@@ -3,10 +3,11 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, BookOpen, CheckCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, CheckCircle, HelpCircle, Video } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import VideoPlayer from "@/components/VideoPlayer";
 import CourseSidebar from "@/components/CourseSidebar";
+import QuizComponent, { QuizData } from "@/components/QuizComponent";
 
 interface Lesson {
   id: string;
@@ -32,6 +33,7 @@ interface LessonPlayerClientProps {
   courseId: string;
   courseTitle: string;
   lesson: Lesson;
+  quiz?: QuizData | null;
   chapters: SidebarChapter[];
   initialCompletedLessonIds: string[];
   isSubscribed: boolean;
@@ -43,6 +45,7 @@ export default function LessonPlayerClient({
   courseId,
   courseTitle,
   lesson,
+  quiz,
   chapters,
   initialCompletedLessonIds,
   isSubscribed,
@@ -50,6 +53,7 @@ export default function LessonPlayerClient({
   nextLessonId,
 }: LessonPlayerClientProps) {
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState<"video" | "quiz">("video");
   const [completedIds, setCompletedIds] = useState<string[]>(initialCompletedLessonIds);
   const [isPending, startTransition] = useTransition();
 
@@ -67,13 +71,11 @@ export default function LessonPlayerClient({
         throw new Error("Impossible de sauvegarder la progression.");
       }
 
-      // Update state locally
       if (isCurrentCompleted) {
         setCompletedIds(completedIds.filter((id) => id !== lesson.id));
       } else {
         setCompletedIds([...completedIds, lesson.id]);
         
-        // Auto-advance to the next lesson if available and marking as completed
         if (nextLessonId) {
           setTimeout(() => {
             startTransition(() => {
@@ -81,7 +83,6 @@ export default function LessonPlayerClient({
             });
           }, 600);
         } else {
-          // If no next lesson, redirect to course page
           setTimeout(() => {
             startTransition(() => {
               router.push(`/courses/${courseId}`);
@@ -97,6 +98,13 @@ export default function LessonPlayerClient({
     }
   };
 
+  const handleQuizComplete = (score: number, passed: boolean) => {
+    if (passed && !isCurrentCompleted) {
+      setCompletedIds((prev) => [...prev, lesson.id]);
+      router.refresh();
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       <Navbar />
@@ -105,7 +113,7 @@ export default function LessonPlayerClient({
         {/* Left Column: Player & Meta */}
         <div className="flex-1 space-y-6 p-4 md:p-0">
           
-          {/* Back button */}
+          {/* Back button & Nav */}
           <div className="flex items-center justify-between">
             <Link
               href={`/courses/${courseId}`}
@@ -115,7 +123,6 @@ export default function LessonPlayerClient({
               Retour à la formation
             </Link>
             
-            {/* Top Navigation */}
             <div className="flex items-center gap-2">
               {prevLessonId ? (
                 <Link
@@ -161,31 +168,79 @@ export default function LessonPlayerClient({
             hasNext={!!nextLessonId}
           />
 
-          {/* Lesson Details */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-            <div className="flex justify-between items-start gap-4">
-              <div>
-                <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wider bg-blue-50 px-2.5 py-1 rounded-full">
-                  Leçon {lesson.position}
+          {/* Navigation Tabs (Description vs Quiz) */}
+          <div className="flex items-center gap-2 border-b border-slate-200 pt-2">
+            <button
+              onClick={() => setActiveTab("video")}
+              className={`pb-3 px-4 font-bold text-xs flex items-center gap-2 border-b-2 transition ${
+                activeTab === "video"
+                  ? "border-[#FA4949] text-[#FA4949]"
+                  : "border-transparent text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              <Video className="w-4 h-4" />
+              À propos de la leçon
+            </button>
+
+            <button
+              onClick={() => setActiveTab("quiz")}
+              className={`pb-3 px-4 font-bold text-xs flex items-center gap-2 border-b-2 transition ${
+                activeTab === "quiz"
+                  ? "border-[#FA4949] text-[#FA4949]"
+                  : "border-transparent text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              <HelpCircle className="w-4 h-4" />
+              Quizz & Exercices
+              {quiz && quiz.questions.length > 0 && (
+                <span className="bg-[#FA4949] text-white text-[10px] px-2 py-0.5 rounded-full">
+                  {quiz.questions.length}
                 </span>
-                <h1 className="text-xl md:text-2xl font-extrabold text-slate-800 mt-2.5">
-                  {lesson.title}
-                </h1>
+              )}
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === "video" ? (
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+              <div className="flex justify-between items-start gap-4">
+                <div>
+                  <span className="text-[10px] text-[#FA4949] font-bold uppercase tracking-wider bg-red-50 px-2.5 py-1 rounded-full">
+                    Leçon {lesson.position}
+                  </span>
+                  <h1 className="text-xl md:text-2xl font-extrabold text-slate-800 mt-2.5">
+                    {lesson.title}
+                  </h1>
+                </div>
+                {isCurrentCompleted && (
+                  <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold shrink-0">
+                    <CheckCircle className="h-4 w-4 text-emerald-500" />
+                    Complété
+                  </div>
+                )}
               </div>
-              {isCurrentCompleted && (
-                <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold shrink-0">
-                  <CheckCircle className="h-4 w-4 text-emerald-500" />
-                  Complété
+
+              {lesson.description && (
+                <div className="text-slate-600 text-sm font-light leading-relaxed border-t border-slate-100 pt-4">
+                  {lesson.description}
                 </div>
               )}
             </div>
-
-            {lesson.description && (
-              <div className="text-slate-600 text-sm font-light leading-relaxed border-t border-slate-100 pt-4">
-                {lesson.description}
-              </div>
-            )}
-          </div>
+          ) : (
+            <div>
+              {quiz ? (
+                <QuizComponent quiz={quiz} onComplete={handleQuizComplete} />
+              ) : (
+                <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm text-center">
+                  <HelpCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                  <h3 className="font-bold text-slate-800 text-lg">Aucun Quizz disponible pour cette leçon</h3>
+                  <p className="text-slate-400 text-xs mt-1">
+                    Le coach n'a pas encore ajouté de QCM ou d'exercice pour cette vidéo.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Right Column: Course Curriculum Sidebar */}
@@ -205,3 +260,4 @@ export default function LessonPlayerClient({
     </div>
   );
 }
+

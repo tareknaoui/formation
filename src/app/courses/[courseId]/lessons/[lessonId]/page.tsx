@@ -44,11 +44,25 @@ export default async function LessonPage({ params }: LessonPageProps) {
   // Find the current lesson in the course structure
   const currentLesson = await db.lesson.findUnique({
     where: { id: lessonId },
+    include: {
+      quizzes: {
+        include: {
+          questions: {
+            include: {
+              options: true,
+            },
+            orderBy: { position: "asc" },
+          },
+        },
+      },
+    },
   });
 
   if (!currentLesson || currentLesson.chapterId === "") {
     redirect(`/courses/${courseId}`);
   }
+
+  const quiz = currentLesson.quizzes[0] || null;
 
   // Double check that the lesson belongs to this course
   const lessonChapter = course.chapters.find((ch) => ch.id === currentLesson.chapterId);
@@ -110,6 +124,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
         videoUrl: currentLesson.videoUrl,
         position: currentLesson.position,
       }}
+      quiz={quiz}
       chapters={sidebarChapters}
       initialCompletedLessonIds={completedLessonIds}
       isSubscribed={isSubscribed}
@@ -118,3 +133,4 @@ export default async function LessonPage({ params }: LessonPageProps) {
     />
   );
 }
+

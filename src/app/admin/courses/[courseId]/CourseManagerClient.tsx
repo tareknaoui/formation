@@ -77,6 +77,42 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
     duration: "05:00",
   });
 
+  // Quiz Modal State
+  const [quizModalOpen, setQuizModalOpen] = useState(false);
+  const [activeQuizLessonId, setActiveQuizLessonId] = useState<string | null>(null);
+  const [isSavingQuiz, setIsSavingQuiz] = useState(false);
+  const [quizForm, setQuizForm] = useState<{
+    id?: string;
+    title: string;
+    description: string;
+    passingScore: number;
+    questions: {
+      prompt: string;
+      hanzi: string;
+      pinyin: string;
+      explanation: string;
+      options: { text: string; isCorrect: boolean }[];
+    }[];
+  }>({
+    title: "Quizz de validation",
+    description: "Répondez aux questions pour valider vos connaissances sur cette leçon.",
+    passingScore: 70,
+    questions: [
+      {
+        prompt: "Que signifie cette expression en chinois ?",
+        hanzi: "你好",
+        pinyin: "nǐ hǎo",
+        explanation: "你好 (nǐ hǎo) est la salutation standard en chinois.",
+        options: [
+          { text: "Bonjour / Salut", isCorrect: true },
+          { text: "Au revoir", isCorrect: false },
+          { text: "Merci", isCorrect: false },
+          { text: "S'il vous plaît", isCorrect: false },
+        ],
+      },
+    ],
+  });
+
   // Save Course Details
   const handleSaveCourse = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,7 +170,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
     if (!chapterForm.title) return;
     try {
       if (editingChapterId) {
-        // Edit
         const res = await fetch(`/api/courses/${course.id}/chapters/${editingChapterId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -145,7 +180,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
           setChapters(chapters.map(c => c.id === editingChapterId ? { ...c, ...updated } : c));
         }
       } else {
-        // Create
         const res = await fetch(`/api/courses/${course.id}/chapters`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -198,7 +232,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
     if (!lessonForm.title || !activeChapterId) return;
     try {
       if (editingLessonId) {
-        // Edit
         const res = await fetch(`/api/courses/${course.id}/chapters/${activeChapterId}/lessons/${editingLessonId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -217,7 +250,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
           }));
         }
       } else {
-        // Create
         const res = await fetch(`/api/courses/${course.id}/chapters/${activeChapterId}/lessons`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -258,6 +290,83 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
     }
   };
 
+  // Quiz Modal handlers
+  const openQuizModal = (lesson: Lesson) => {
+    setActiveQuizLessonId(lesson.id);
+    setQuizForm({
+      title: `Quizz : ${lesson.title}`,
+      description: "Testez votre niveau sur les notions abordées dans cette leçon.",
+      passingScore: 70,
+      questions: [
+        {
+          prompt: "Quelle est la traduction exacte ?",
+          hanzi: "你好",
+          pinyin: "nǐ hǎo",
+          explanation: "你好 (nǐ hǎo) est la salutation standard.",
+          options: [
+            { text: "Bonjour", isCorrect: true },
+            { text: "Au revoir", isCorrect: false },
+            { text: "Merci", isCorrect: false },
+          ],
+        },
+      ],
+    });
+    setQuizModalOpen(true);
+  };
+
+  const addQuestionToQuiz = () => {
+    setQuizForm((prev) => ({
+      ...prev,
+      questions: [
+        ...prev.questions,
+        {
+          prompt: "Nouvelle question",
+          hanzi: "",
+          pinyin: "",
+          explanation: "",
+          options: [
+            { text: "Option 1", isCorrect: true },
+            { text: "Option 2", isCorrect: false },
+          ],
+        },
+      ],
+    }));
+  };
+
+  const removeQuestionFromQuiz = (index: number) => {
+    setQuizForm((prev) => ({
+      ...prev,
+      questions: prev.questions.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSaveQuiz = async () => {
+    if (!activeQuizLessonId || !quizForm.title) return;
+    try {
+      setIsSavingQuiz(true);
+      const res = await fetch("/api/admin/quizzes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...quizForm,
+          lessonId: activeQuizLessonId,
+        }),
+      });
+
+      if (res.ok) {
+        alert("Quizz sauvegardé avec succès !");
+        setQuizModalOpen(false);
+        router.refresh();
+      } else {
+        alert("Erreur lors de la sauvegarde du quizz.");
+      }
+    } catch (err) {
+      console.error("[SAVE_QUIZ_ERROR]", err);
+    } finally {
+      setIsSavingQuiz(false);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-50">
       <Navbar />
@@ -283,7 +392,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
             <h1 className="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
               Configuration du cours
             </h1>
-            <p className="text-slate-400 text-xs font-light">Gérez les métadonnées, le programme et la publication du cours.</p>
+            <p className="text-slate-400 text-xs font-light">Gérez les métadonnées, le programme et les quizz de révision.</p>
           </div>
           
           <button
@@ -307,7 +416,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
             </h2>
             
             <form onSubmit={handleSaveCourse} className="space-y-4">
-              {/* Title */}
               <div className="space-y-1">
                 <label className="text-[10px] font-bold uppercase text-slate-450">Titre</label>
                 <input
@@ -318,7 +426,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                 />
               </div>
 
-              {/* Description */}
               <div className="space-y-1">
                 <label className="text-[10px] font-bold uppercase text-slate-450">Description</label>
                 <textarea
@@ -329,7 +436,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                 />
               </div>
 
-              {/* Category */}
               <div className="space-y-1">
                 <label className="text-[10px] font-bold uppercase text-slate-450">Catégorie</label>
                 <select
@@ -344,7 +450,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                 </select>
               </div>
 
-              {/* Image URL */}
               <div className="space-y-1">
                 <label className="text-[10px] font-bold uppercase text-slate-450">Miniature (Image URL)</label>
                 <input
@@ -355,7 +460,6 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                 />
               </div>
 
-              {/* Is Published Toggle */}
               <div className="flex items-center justify-between p-3 border border-slate-100 rounded-xl bg-slate-50/50">
                 <div className="flex flex-col">
                   <span className="text-xs font-bold text-slate-700">Statut de publication</span>
@@ -448,7 +552,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                     <div className="divide-y divide-slate-100">
                       {chapter.lessons.length === 0 ? (
                         <div className="p-4 text-center text-slate-400 text-xs font-light">
-                          Aucune leçon dans ce chapitre. Ajoutez une leçon pour commencer à inclure des vidéos.
+                          Aucune leçon dans ce chapitre.
                         </div>
                       ) : (
                         chapter.lessons.map((lesson) => (
@@ -457,23 +561,24 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
                               <Video className="h-4 w-4 text-slate-400 shrink-0" />
                               <div className="min-w-0">
                                 <p className="font-bold text-slate-700 truncate">{lesson.title}</p>
-                                {lesson.videoUrl ? (
+                                {lesson.videoUrl && (
                                   <p className="text-[10px] text-blue-500 font-medium truncate max-w-xs" title={lesson.videoUrl}>
                                     ID/URL: {lesson.videoUrl}
-                                  </p>
-                                ) : (
-                                  <p className="text-[10px] text-amber-500 font-semibold flex items-center gap-0.5">
-                                    <AlertCircle className="h-3 w-3" />
-                                    Pas de vidéo Google Drive associée
                                   </p>
                                 )}
                               </div>
                             </div>
                             
                             <div className="flex items-center gap-2 shrink-0">
-                              {lesson.duration && (
-                                <span className="text-[10px] text-slate-400 font-semibold">{lesson.duration}</span>
-                              )}
+                              <button
+                                onClick={() => openQuizModal(lesson)}
+                                className="px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 font-bold text-[10px] rounded-full flex items-center gap-1 transition"
+                                title="Gérer le Quizz pour cette leçon"
+                              >
+                                <HelpCircle className="h-3 w-3 text-amber-600" />
+                                Quizz
+                              </button>
+                              
                               <button
                                 onClick={() => openLessonModal(chapter.id, lesson)}
                                 className="p-1 text-slate-400 hover:text-slate-600 rounded hover:bg-slate-100 transition"
@@ -501,6 +606,182 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
 
         </div>
       </main>
+
+      {/* ================= MODAL QUIZ FORM ================= */}
+      {quizModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden my-8 max-h-[90vh] flex flex-col">
+            <div className="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center shrink-0">
+              <h3 className="font-extrabold text-sm text-slate-800 flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-amber-500" />
+                Gérer le Quizz de la leçon
+              </h3>
+              <button onClick={() => setQuizModalOpen(false)} className="text-slate-400 hover:text-slate-600 font-bold text-xs uppercase">Fermer</button>
+            </div>
+            
+            <div className="p-6 space-y-6 overflow-y-auto flex-1">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1 col-span-2 sm:col-span-1">
+                  <label className="text-[10px] font-bold uppercase text-slate-400">Titre du Quizz</label>
+                  <input
+                    type="text"
+                    value={quizForm.title}
+                    onChange={(e) => setQuizForm({ ...quizForm, title: e.target.value })}
+                    className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1 col-span-2 sm:col-span-1">
+                  <label className="text-[10px] font-bold uppercase text-slate-400">Seuil de réussite (%)</label>
+                  <input
+                    type="number"
+                    value={quizForm.passingScore}
+                    onChange={(e) => setQuizForm({ ...quizForm, passingScore: parseInt(e.target.value) || 70 })}
+                    className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs text-slate-900 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-xs text-slate-800 uppercase tracking-wider">
+                    Questions du Quizz ({quizForm.questions.length})
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={addQuestionToQuiz}
+                    className="px-3 py-1.5 bg-blue-50 text-blue-700 font-bold text-xs rounded-full hover:bg-blue-100 transition flex items-center gap-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Ajouter une question
+                  </button>
+                </div>
+
+                {quizForm.questions.map((q, qIdx) => (
+                  <div key={qIdx} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3 relative">
+                    <div className="flex justify-between items-center">
+                      <span className="font-extrabold text-xs text-slate-700">Question {qIdx + 1}</span>
+                      {quizForm.questions.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeQuestionFromQuiz(qIdx)}
+                          className="text-red-500 hover:text-red-700 text-xs font-bold"
+                        >
+                          Supprimer
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        placeholder="Intitulé de la question (ex: Que veut dire...)"
+                        value={q.prompt}
+                        onChange={(e) => {
+                          const updated = [...quizForm.questions];
+                          updated[qIdx].prompt = e.target.value;
+                          setQuizForm({ ...quizForm, questions: updated });
+                        }}
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-white"
+                      />
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          placeholder="Sinogrammes Hanzi (ex: 你好)"
+                          value={q.hanzi || ""}
+                          onChange={(e) => {
+                            const updated = [...quizForm.questions];
+                            updated[qIdx].hanzi = e.target.value;
+                            setQuizForm({ ...quizForm, questions: updated });
+                          }}
+                          className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs bg-white"
+                        />
+
+                        <input
+                          type="text"
+                          placeholder="Prononciation Pinyin (ex: nǐ hǎo)"
+                          value={q.pinyin || ""}
+                          onChange={(e) => {
+                            const updated = [...quizForm.questions];
+                            updated[qIdx].pinyin = e.target.value;
+                            setQuizForm({ ...quizForm, questions: updated });
+                          }}
+                          className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs bg-white"
+                        />
+                      </div>
+
+                      <div className="space-y-2 pt-2">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase">Options de réponse (Cochez la bonne réponse)</label>
+                        {q.options.map((opt, optIdx) => (
+                          <div key={optIdx} className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name={`correct-${qIdx}`}
+                              checked={opt.isCorrect}
+                              onChange={() => {
+                                const updated = [...quizForm.questions];
+                                updated[qIdx].options = updated[qIdx].options.map((o, idx) => ({
+                                  ...o,
+                                  isCorrect: idx === optIdx,
+                                }));
+                                setQuizForm({ ...quizForm, questions: updated });
+                              }}
+                              className="h-4 w-4 text-blue-600"
+                            />
+                            <input
+                              type="text"
+                              placeholder={`Option ${optIdx + 1}`}
+                              value={opt.text}
+                              onChange={(e) => {
+                                const updated = [...quizForm.questions];
+                                updated[qIdx].options[optIdx].text = e.target.value;
+                                setQuizForm({ ...quizForm, questions: updated });
+                              }}
+                              className="flex-1 px-3 py-1.5 border border-slate-200 rounded-lg text-xs bg-white"
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      <input
+                        type="text"
+                        placeholder="Explication (optionnelle)"
+                        value={q.explanation || ""}
+                        onChange={(e) => {
+                          const updated = [...quizForm.questions];
+                          updated[qIdx].explanation = e.target.value;
+                          setQuizForm({ ...quizForm, questions: updated });
+                        }}
+                        className="w-full px-3 py-1.5 border border-slate-200 rounded-lg text-xs bg-white text-slate-600"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => setQuizModalOpen(false)}
+                className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 font-bold text-xs"
+              >
+                Annuler
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSaveQuiz}
+                disabled={isSavingQuiz}
+                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm"
+              >
+                {isSavingQuiz ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                Sauvegarder le Quizz
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ================= MODAL CHAPTER FORM ================= */}
       {chapterModalOpen && (
@@ -551,7 +832,7 @@ export default function CourseManagerClient({ course: initialCourse, chapters: i
 
       {/* ================= MODAL LESSON FORM ================= */}
       {lessonModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-[#0B0F19]/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white border border-slate-200 w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
               <h3 className="font-extrabold text-sm text-slate-800">
