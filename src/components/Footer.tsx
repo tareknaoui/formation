@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MessageCircle, Phone, Heart } from "lucide-react";
+import { MessageCircle, Heart } from "lucide-react";
 
 function InstagramIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -25,67 +25,67 @@ export function Footer() {
   const coachWhatsappNumber = "213550000000";
 
   return (
-    <footer className="bg-[#0B0F19] border-t border-[#2A364F] pt-12 pb-8 text-[#94A3B8] text-xs">
+    <footer className="bg-[#0A083B] text-slate-300 pt-16 pb-10 text-xs border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           
           {/* Brand */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 font-bold text-white text-base">
-              <span className="w-8 h-8 rounded-lg bg-[#D62828] flex items-center justify-center text-[#FFB703] font-bold text-sm">
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-3 font-extrabold text-white text-lg">
+              <span className="w-9 h-9 rounded-2xl bg-[#FA4949] flex items-center justify-center text-white font-black text-lg shadow-md">
                 汉
               </span>
-              <span>Le Chinois Vite & Bien DZ</span>
+              <span>Le Chinois Vite & Bien</span>
             </div>
-            <p className="text-xs text-[#94A3B8] leading-relaxed">
+            <p className="text-xs text-slate-400 leading-relaxed font-normal">
               Plateforme de formation et coaching individuel en chinois mandarin pour étudiants, professionnels et commerçants en Algérie 🇩🇿.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-white text-sm mb-3">Navigation</h4>
-            <ul className="space-y-2">
-              <li><Link href="#hero" className="hover:text-white transition-colors">Accueil</Link></li>
-              <li><Link href="#formations" className="hover:text-[#FFB703] transition-colors">Formations & Tarifs (DA)</Link></li>
-              <li><Link href="#methode" className="hover:text-white transition-colors">Pédagogie & Méthode</Link></li>
-              <li><Link href="#avis" className="hover:text-white transition-colors">Témoignages Élèves</Link></li>
-              <li><Link href="#reservation" className="hover:text-[#D62828] transition-colors">Réservation de créneau</Link></li>
+            <h4 className="font-extrabold text-white text-sm mb-4 tracking-wide">Navigation</h4>
+            <ul className="space-y-2.5 font-medium">
+              <li><Link href="#hero" className="hover:text-[#FA4949] transition-colors">Accueil</Link></li>
+              <li><Link href="#formations" className="hover:text-[#FA4949] transition-colors">Formations & Tarifs (DA)</Link></li>
+              <li><Link href="#methode" className="hover:text-[#FA4949] transition-colors">Pédagogie & Méthode</Link></li>
+              <li><Link href="#avis" className="hover:text-[#FA4949] transition-colors">Témoignages Élèves</Link></li>
+              <li><Link href="#reservation" className="text-[#FA4949] hover:underline font-bold">Réservation de créneau</Link></li>
             </ul>
           </div>
 
           {/* Programs */}
           <div>
-            <h4 className="font-bold text-white text-sm mb-3">Formations en DA</h4>
-            <ul className="space-y-2 text-xs">
-              <li><span className="text-white">Chinois Débutant (HSK 1-2)</span> - 6 500 DA</li>
-              <li><span className="text-white">Mandarin Business</span> - 12 000 DA</li>
-              <li><span className="text-white">Préparation HSK 3-4</span> - 9 500 DA</li>
-              <li><span className="text-white">Coaching VIP 1-on-1</span> - 2 500 DA / séance</li>
+            <h4 className="font-extrabold text-white text-sm mb-4 tracking-wide">Formations en DA</h4>
+            <ul className="space-y-2.5 text-xs font-medium">
+              <li><span className="text-white font-bold">Chinois Débutant (HSK 1-2)</span> - 6 500 DA</li>
+              <li><span className="text-white font-bold">Mandarin Business</span> - 12 000 DA</li>
+              <li><span className="text-white font-bold">Préparation HSK 3-4</span> - 9 500 DA</li>
+              <li><span className="text-white font-bold">Coaching VIP 1-on-1</span> - 2 500 DA / h</li>
             </ul>
           </div>
 
           {/* Contact & Social */}
           <div>
-            <h4 className="font-bold text-white text-sm mb-3">Contact Direct</h4>
-            <div className="space-y-3">
+            <h4 className="font-extrabold text-white text-sm mb-4 tracking-wide">Contact Direct</h4>
+            <div className="space-y-3 font-semibold">
               <a
                 href={`https://wa.me/${coachWhatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white hover:text-[#FFB703] transition-colors"
+                className="flex items-center gap-2.5 text-slate-200 hover:text-emerald-400 transition-colors"
               >
-                <MessageCircle className="w-4 h-4 text-[#06D6A0]" />
-                <span>WhatsApp Coach : +213 550 00 00 00</span>
+                <MessageCircle className="w-4 h-4 text-emerald-400 fill-current" />
+                <span>WhatsApp : +213 550 00 00 00</span>
               </a>
 
               <a
                 href="https://www.instagram.com/le_chinois_vite_et_bien_dz/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white hover:text-[#FFB703] transition-colors"
+                className="flex items-center gap-2.5 text-slate-200 hover:text-[#FA4949] transition-colors"
               >
-                <InstagramIcon className="w-4 h-4 text-[#D62828]" />
+                <InstagramIcon className="w-4 h-4 text-[#FA4949]" />
                 <span>@le_chinois_vite_et_bien_dz</span>
               </a>
             </div>
@@ -94,10 +94,10 @@ export function Footer() {
         </div>
 
         {/* Bottom copyright */}
-        <div className="pt-6 border-t border-[#2A364F]/60 text-center flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+        <div className="pt-8 border-t border-slate-800 text-center flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 font-medium">
           <p>&copy; {new Date().getFullYear()} Le Chinois Vite et Bien DZ. Tous droits réservés.</p>
-          <p className="flex items-center gap-1">
-            Fait avec <Heart className="w-3 h-3 text-[#D62828] fill-current" /> pour la communauté algérienne.
+          <p className="flex items-center gap-1.5">
+            Fait avec <Heart className="w-3.5 h-3.5 text-[#FA4949] fill-current" /> pour la communauté algérienne.
           </p>
         </div>
 

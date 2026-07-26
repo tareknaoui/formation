@@ -1,23 +1,27 @@
 @import "tailwindcss";
 
-/* ── Brand tokens: Le Chinois Vite et Bien DZ ───────────── */
+/* ── Brand tokens: LevelUP Mandarin DZ (Level UP Chinese Aesthetic) ───────── */
 :root {
-  --background: #0B0F19;
-  --foreground: #F8FAFC;
+  --background: #F8FAFC;
+  --foreground: #0A083B;
 
-  /* Brand palette */
-  --brand-red: #D62828;
-  --brand-red-hover: #B71C1C;
+  /* LevelUP Brand Palette */
+  --brand-red: #FA4949;
+  --brand-red-hover: #D93838;
+  --brand-navy: #0A083B;
   --brand-gold: #FFB703;
-  --brand-gold-hover: #E0A100;
-  --surface-dark: #161F33;
-  --surface-border: #2A364F;
-  --text-muted: #94A3B8;
-  --accent-green: #06D6A0;
+  --brand-gold-hover: #E5A400;
+  --surface-light: #FFFFFF;
+  --surface-subtle: #F1F5F9;
+  --surface-border: #E2E8F0;
+  --text-muted: #64748B;
+  --accent-green: #059669;
 
-  /* Glow / blur effects */
-  --glow-red: 0 0 35px rgba(214, 40, 40, 0.3);
-  --glow-gold: 0 0 35px rgba(255, 183, 3, 0.25);
+  /* Elevated shadows */
+  --shadow-sm: 0 1px 3px rgba(10, 8, 59, 0.05);
+  --shadow-card: 0 6px 24px -4px rgba(10, 8, 59, 0.06), 0 2px 8px -2px rgba(10, 8, 59, 0.04);
+  --shadow-card-hover: 0 16px 36px -6px rgba(250, 73, 73, 0.14), 0 6px 16px -2px rgba(10, 8, 59, 0.06);
+  --shadow-red-pill: 0 6px 20px rgba(250, 73, 73, 0.28);
 }
 
 @theme inline {
@@ -32,92 +36,89 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Keyframes ─────────────────────────────────────────── */
-@keyframes shimmer-red {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
-}
-
+/* ── Animations ─────────────────────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50%       { transform: translateY(-10px) rotate(1deg); }
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
 }
 
 @keyframes pulse-subtle {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.03); opacity: 0.9; }
-}
-
-/* ── Utility Classes ───────────────────────────────────── */
-.animate-shimmer-red {
-  background: linear-gradient(
-    90deg,
-    #D62828 0%,
-    #FFB703 50%,
-    #D62828 100%
-  );
-  background-size: 200% auto;
-  animation: shimmer-red 3s linear infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  50% { transform: scale(1.02); opacity: 0.95; }
 }
 
 .animate-float {
-  animation: float 5s ease-in-out infinite;
+  animation: float 4s ease-in-out infinite;
 }
 
 .animate-pulse-subtle {
-  animation: pulse-subtle 4s ease-in-out infinite;
+  animation: pulse-subtle 3s ease-in-out infinite;
 }
 
-/* ── Glassmorphism Dark ────────────────────────────────── */
-.glass-card {
-  background: rgba(22, 31, 51, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #2A364F;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* ── Card & Nav Component Styling ───────────────────────────── */
+.card-light {
+  background: var(--surface-light);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-card);
+  border-radius: 1.25rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass-card:hover {
-  border-color: rgba(214, 40, 40, 0.5);
-  box-shadow: var(--glow-red);
+.card-light:hover {
+  border-color: rgba(250, 73, 73, 0.3);
+  box-shadow: var(--shadow-card-hover);
   transform: translateY(-3px);
 }
 
 .glass-nav {
-  background: rgba(11, 15, 25, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(42, 54, 79, 0.6);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--surface-border);
 }
 
+/* ── Pill Buttons (LevelUP Style) ────────────────────────── */
 .btn-primary {
-  background: #D62828;
-  color: #F8FAFC;
-  font-weight: 600;
-  border-radius: 0.75rem;
+  background-color: var(--brand-red);
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 9999px;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 20px rgba(214, 40, 40, 0.35);
+  box-shadow: var(--shadow-red-pill);
 }
 
 .btn-primary:hover {
-  background: #B71C1C;
+  background-color: var(--brand-red-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 25px rgba(214, 40, 40, 0.5);
+  box-shadow: 0 8px 24px rgba(250, 73, 73, 0.38);
 }
 
 .btn-gold {
-  background: #FFB703;
-  color: #0B0F19;
+  background-color: var(--brand-gold);
+  color: var(--brand-navy);
   font-weight: 700;
-  border-radius: 0.75rem;
+  border-radius: 9999px;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 20px rgba(255, 183, 3, 0.3);
+  box-shadow: 0 4px 14px rgba(255, 183, 3, 0.35);
 }
 
 .btn-gold:hover {
-  background: #E0A100;
+  background-color: var(--brand-gold-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 25px rgba(255, 183, 3, 0.45);
+  box-shadow: 0 6px 18px rgba(255, 183, 3, 0.45);
+}
+
+.btn-secondary {
+  background-color: var(--surface-light);
+  color: var(--brand-navy);
+  border: 1px solid var(--surface-border);
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--brand-red);
+  color: var(--brand-red);
+  background-color: #FFF5F5;
 }

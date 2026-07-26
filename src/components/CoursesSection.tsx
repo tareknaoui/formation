@@ -89,18 +89,18 @@ const COURSES: Course[] = [
 
 export function CoursesSection() {
   return (
-    <section id="formations" className="py-20 bg-[#0B0F19] relative">
+    <section id="formations" className="py-20 bg-[#F8FAFC] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D62828]/10 border border-[#D62828]/30 text-[#D62828] text-xs font-bold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 border border-red-100 text-[#FA4949] text-xs font-black uppercase tracking-wider mb-4">
             Programmes & Tarifs
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+          <h2 className="text-3xl sm:text-4xl font-black text-[#0A083B]">
             Nos Formations en Mandarin (en DA) 🇩🇿
           </h2>
-          <p className="mt-4 text-[#94A3B8] text-base">
+          <p className="mt-4 text-slate-600 text-base font-normal">
             Des programmes adaptés à votre rythme et vos objectifs. Choisissez la formule qui vous convient et réservez directement avec le coach.
           </p>
         </div>
@@ -112,48 +112,48 @@ export function CoursesSection() {
             return (
               <div
                 key={course.id}
-                className={`glass-card rounded-2xl p-6 flex flex-col justify-between relative transition-all duration-300 ${
+                className={`bg-white rounded-3xl p-7 flex flex-col justify-between relative transition-all duration-300 border shadow-md hover:shadow-xl ${
                   course.highlighted
-                    ? "border-[#FFB703] shadow-xl shadow-[#FFB703]/10 scale-[1.02] bg-[#161F33]"
-                    : "border-[#2A364F]"
+                    ? "border-[#FA4949] ring-2 ring-[#FA4949]/20 scale-[1.02] bg-gradient-to-b from-red-50/30 to-white"
+                    : "border-slate-200"
                 }`}
               >
                 {course.highlighted && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#D62828] to-[#FFB703] text-[#0B0F19] text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-md">
-                    <Sparkles className="w-3 h-3" /> Recommandé Business
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#FA4949] text-white text-[11px] font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-md">
+                    <Sparkles className="w-3.5 h-3.5" /> Recommandé Business
                   </div>
                 )}
 
                 <div>
                   {/* Badge & Icon */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[11px] font-bold tracking-wider px-2.5 py-1 rounded-full bg-[#0B0F19] text-[#FFB703] border border-[#2A364F]">
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-[11px] font-extrabold tracking-wider px-3 py-1 rounded-full bg-slate-100 text-[#0A083B] border border-slate-200">
                       {course.badge}
                     </span>
-                    <div className="w-10 h-10 rounded-xl bg-[#D62828]/10 flex items-center justify-center text-[#D62828]">
+                    <div className="w-10 h-10 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-[#FA4949]">
                       <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
                   {/* Title & Subtitle */}
-                  <h3 className="text-xl font-bold text-white mb-2">{course.title}</h3>
-                  <p className="text-xs text-[#94A3B8] mb-6 leading-relaxed">{course.subtitle}</p>
+                  <h3 className="text-xl font-black text-[#0A083B] mb-2">{course.title}</h3>
+                  <p className="text-xs text-slate-500 font-medium mb-6 leading-relaxed">{course.subtitle}</p>
 
                   {/* Price */}
-                  <div className="mb-6 p-3 rounded-xl bg-[#0B0F19]/60 border border-[#2A364F]">
+                  <div className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-100">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl sm:text-3xl font-extrabold text-[#FFB703]">
+                      <span className="text-2xl sm:text-3xl font-black text-[#FA4949]">
                         {course.price}
                       </span>
-                      <span className="text-xs text-[#94A3B8] font-medium">{course.period}</span>
+                      <span className="text-xs text-slate-500 font-bold">{course.period}</span>
                     </div>
                   </div>
 
                   {/* Feature list */}
                   <ul className="space-y-3 mb-8">
                     {course.features.map((feat, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-xs text-slate-300">
-                        <Check className="w-4 h-4 text-[#06D6A0] shrink-0 mt-0.5" />
+                      <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 font-medium">
+                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                         <span>{feat}</span>
                       </li>
                     ))}
@@ -163,10 +163,10 @@ export function CoursesSection() {
                 {/* CTA */}
                 <a
                   href="#reservation"
-                  className={`w-full py-3 rounded-xl font-bold text-xs sm:text-sm text-center transition-all flex items-center justify-center gap-2 ${
+                  className={`w-full py-3.5 rounded-full font-bold text-xs sm:text-sm text-center transition-all flex items-center justify-center gap-2 ${
                     course.highlighted
-                      ? "btn-gold"
-                      : "btn-primary"
+                      ? "btn-primary"
+                      : "btn-secondary"
                   }`}
                 >
                   S&apos;inscrire à cette formule

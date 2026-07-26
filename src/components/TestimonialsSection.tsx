@@ -52,19 +52,19 @@ const TESTIMONIALS: Testimonial[] = [
 
 export function TestimonialsSection() {
   return (
-    <section id="avis" className="py-20 bg-[#0B0F19] relative border-t border-[#2A364F]/50">
+    <section id="avis" className="py-20 bg-white relative border-t border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFB703]/10 border border-[#FFB703]/30 text-[#FFB703] text-xs font-bold uppercase tracking-wider mb-4">
-            <InstagramIcon className="w-4 h-4 text-[#FFB703]" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-black uppercase tracking-wider mb-4">
+            <InstagramIcon className="w-4 h-4 text-amber-600" />
             Avis & Témoignages d&apos;Élèves
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+          <h2 className="text-3xl sm:text-4xl font-black text-[#0A083B]">
             Ce que disent nos apprenants en Algérie
           </h2>
-          <p className="mt-3 text-[#94A3B8] text-sm sm:text-base">
+          <p className="mt-3 text-slate-600 text-sm sm:text-base font-normal">
             Des centaines d&apos;étudiants et commerçants ont accéléré leur apprentissage avec le coach.
           </p>
         </div>
@@ -72,31 +72,31 @@ export function TestimonialsSection() {
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TESTIMONIALS.map((t, idx) => (
-            <div key={idx} className="glass-card rounded-2xl p-6 border border-[#2A364F] flex flex-col justify-between">
+            <div key={idx} className="bg-[#F8FAFC] rounded-3xl p-7 border border-slate-200 flex flex-col justify-between shadow-sm hover:shadow-md transition">
               <div>
                 {/* Rating */}
-                <div className="flex items-center gap-1 text-[#FFB703] mb-4">
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
                   {[...Array(t.rating)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-current" />
                   ))}
                 </div>
 
-                <Quote className="w-8 h-8 text-[#D62828]/40 mb-3" />
+                <Quote className="w-8 h-8 text-[#FA4949]/30 mb-3" />
 
-                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed italic mb-6">
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic mb-6 font-medium">
                   &quot;{t.comment}&quot;
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#2A364F] flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-white flex items-center gap-1">
+                  <h4 className="text-sm font-extrabold text-[#0A083B] flex items-center gap-1.5">
                     {t.name}
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#06D6A0]" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   </h4>
-                  <p className="text-[11px] text-[#94A3B8]">{t.role}</p>
+                  <p className="text-xs text-slate-500 font-semibold">{t.role}</p>
                 </div>
-                <span className="text-xs text-[#FFB703] font-medium bg-[#FFB703]/10 px-2 py-0.5 rounded">
+                <span className="text-xs text-[#0A083B] font-bold bg-slate-200/60 px-2.5 py-1 rounded-full">
                   {t.location}
                 </span>
               </div>
@@ -105,19 +105,19 @@ export function TestimonialsSection() {
         </div>
 
         {/* Instagram Follow Callout */}
-        <div className="mt-12 text-center p-6 rounded-2xl glass-card border border-[#2A364F] max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-12 text-center p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
           <div className="text-left">
-            <h4 className="text-sm font-bold text-white flex items-center gap-2">
-              <InstagramIcon className="w-4 h-4 text-[#D62828]" />
+            <h4 className="text-sm font-black text-[#0A083B] flex items-center gap-2">
+              <InstagramIcon className="w-4 h-4 text-[#FA4949]" />
               Suivez le coach sur Instagram
             </h4>
-            <p className="text-xs text-[#94A3B8]">Astuces quotidiennes, vocabulaire et vidéos d&apos;apprentissage.</p>
+            <p className="text-xs text-slate-500 font-medium">Astuces quotidiennes, vocabulaire et vidéos d&apos;apprentissage.</p>
           </div>
           <a
             href="https://www.instagram.com/le_chinois_vite_et_bien_dz/"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-gold px-4 py-2 text-xs font-bold shrink-0 flex items-center gap-1"
+            className="btn-primary px-5 py-2.5 text-xs font-bold shrink-0 flex items-center gap-1.5 shadow-md"
           >
             @le_chinois_vite_et_bien_dz
           </a>
