@@ -57,6 +57,6 @@ export async function PATCH(req: Request, { params }: UserAdminParams) {
 
   } catch (error) {
     console.error("[ADMIN_USER_UPDATE_ERROR]", error);
-    return new NextResponse("Erreur interne.", { status: 550 });
+    return new NextResponse("Erreur interne.", { status: 500 });
   }
 }

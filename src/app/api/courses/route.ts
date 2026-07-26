@@ -30,6 +30,6 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("[COURSES_CREATE_ERROR]", error);
-    return new NextResponse("Erreur interne du serveur.", { status: 550 });
+    return new NextResponse("Erreur interne du serveur.", { status: 500 });
   }
 }

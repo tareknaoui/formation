@@ -30,13 +30,13 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user.password) {
-          throw new Error("Aucun utilisateur trouvé avec cet email.");
+          throw new Error("Email ou mot de passe incorrect.");
         }
 
         const isValid = await bcrypt.compare(credentials.password, user.password);
 
         if (!isValid) {
-          throw new Error("Mot de passe incorrect.");
+          throw new Error("Email ou mot de passe incorrect.");
         }
 
         return {
@@ -59,10 +59,11 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (trigger === "update" && session) {
+        // Only allow safe, user-controlled fields — never trust role from client
         if (typeof session.isSubscribed === "boolean") token.isSubscribed = session.isSubscribed;
         if (session.name) token.name = session.name;
         if (session.image) token.image = session.image;
-        if (session.role) token.role = session.role;
+        // ❌ role is NEVER accepted from session update (C-3 — privilege escalation prevention)
       }
 
       return token;

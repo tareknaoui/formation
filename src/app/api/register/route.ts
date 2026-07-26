@@ -1,14 +1,31 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
+
+// H-1: Input validation schema
+const registerSchema = z.object({
+  name: z.string().min(2, "Le nom doit contenir au moins 2 caractères.").max(100),
+  email: z.string().email("Adresse email invalide."),
+  password: z
+    .string()
+    .min(8, "Le mot de passe doit contenir au moins 8 caractères.")
+    .max(128),
+});
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const body = await req.json();
+    const parsed = registerSchema.safeParse(body);
 
-    if (!name || !email || !password) {
-      return new NextResponse("Champs requis manquants.", { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { errors: parsed.error.flatten().fieldErrors },
+        { status: 422 }
+      );
     }
+
+    const { name, email, password } = parsed.data;
 
     // Check if email already exists
     const existingUser = await db.user.findUnique({
@@ -28,7 +45,7 @@ export async function POST(req: Request) {
         name,
         email,
         password: hashedPassword,
-        role: "USER", // Default role
+        role: "USER", // Default role — never accepted from client
       },
     });
 
@@ -43,3 +60,4 @@ export async function POST(req: Request) {
     return new NextResponse("Erreur interne du serveur.", { status: 500 });
   }
 }
+

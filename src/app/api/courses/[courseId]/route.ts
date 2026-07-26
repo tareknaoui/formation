@@ -18,11 +18,12 @@ export async function PATCH(req: Request, { params }: CourseParams) {
       return new NextResponse("Non autorisé.", { status: 401 });
     }
 
-    const values = await req.json();
+    // C-2: Whitelist only allowed fields — never spread raw request body
+    const { title, description, imageUrl, category, isPublished } = await req.json();
 
     const course = await db.course.update({
       where: { id: courseId },
-      data: { ...values },
+      data: { title, description, imageUrl, category, isPublished },
     });
 
     return NextResponse.json(course);

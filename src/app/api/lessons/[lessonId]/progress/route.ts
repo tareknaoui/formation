@@ -18,21 +18,39 @@ export async function POST(req: Request, { params }: ProgressParams) {
       return new NextResponse("Non autorisé.", { status: 401 });
     }
 
+    const userId = session.user.id;
+
+    // M-3: Verify the lesson actually exists
+    const lesson = await db.lesson.findUnique({ where: { id: lessonId } });
+    if (!lesson) {
+      return new NextResponse("Leçon introuvable.", { status: 404 });
+    }
+
+    // M-3: Verify the user has an active subscription (or is ADMIN)
+    if (session.user.role !== "ADMIN") {
+      const subscription = await db.subscription.findFirst({
+        where: { userId, status: "ACTIVE" },
+      });
+      if (!subscription) {
+        return new NextResponse("Abonnement actif requis.", { status: 403 });
+      }
+    }
+
     const { isCompleted } = await req.json();
 
     const userProgress = await db.userProgress.upsert({
       where: {
         userId_lessonId: {
-          userId: session.user.id,
-          lessonId: lessonId,
+          userId,
+          lessonId,
         },
       },
       update: {
         isCompleted: isCompleted,
       },
       create: {
-        userId: session.user.id,
-        lessonId: lessonId,
+        userId,
+        lessonId,
         isCompleted: isCompleted,
       },
     });
@@ -44,3 +62,4 @@ export async function POST(req: Request, { params }: ProgressParams) {
     return new NextResponse("Erreur interne du serveur.", { status: 500 });
   }
 }
+
