@@ -25,20 +25,20 @@ export function Footer() {
   const coachWhatsappNumber = "213550000000";
 
   return (
-    <footer className="bg-[#0A083B] text-slate-300 pt-16 pb-10 text-xs border-t border-slate-800">
+    <footer className="bg-[#0B0F19] text-slate-400 pt-16 pb-10 text-xs border-t border-slate-800/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           
           {/* Brand */}
           <div className="space-y-3.5">
             <div className="flex items-center gap-3 font-extrabold text-white text-lg">
-              <span className="w-9 h-9 rounded-2xl bg-[#FA4949] flex items-center justify-center text-white font-black text-lg shadow-md">
+              <span className="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-red-500/20 border border-red-400/30">
                 汉
               </span>
-              <span>Le Chinois Vite & Bien</span>
+              <span className="tracking-tight">Le Chinois Vite & Bien</span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed font-normal">
-              Plateforme de formation et coaching individuel en chinois mandarin pour étudiants, professionnels et commerçants en Algérie 🇩🇿.
+              La méthode autonome de référence pour apprendre le mandarin en Algérie 🇩🇿. Vidéos HD, carnet d&apos;écriture PDF et soutien WhatsApp.
             </p>
           </div>
 
@@ -46,22 +46,22 @@ export function Footer() {
           <div>
             <h4 className="font-extrabold text-white text-sm mb-4 tracking-wide">Navigation</h4>
             <ul className="space-y-2.5 font-medium">
-              <li><Link href="#hero" className="hover:text-[#FA4949] transition-colors">Accueil</Link></li>
-              <li><Link href="#formations" className="hover:text-[#FA4949] transition-colors">Formations & Tarifs (DA)</Link></li>
-              <li><Link href="#methode" className="hover:text-[#FA4949] transition-colors">Pédagogie & Méthode</Link></li>
-              <li><Link href="#avis" className="hover:text-[#FA4949] transition-colors">Témoignages Élèves</Link></li>
-              <li><Link href="#reservation" className="text-[#FA4949] hover:underline font-bold">Réservation de créneau</Link></li>
+              <li><Link href="#hero" className="hover:text-red-400 transition-colors">Accueil</Link></li>
+              <li><Link href="#syllabes" className="hover:text-red-400 transition-colors">Programme HSK (1 à 3)</Link></li>
+              <li><Link href="#coach" className="hover:text-red-400 transition-colors">À Propos du Coach</Link></li>
+              <li><Link href="#methode" className="hover:text-red-400 transition-colors">La Méthode Solo</Link></li>
+              <li><Link href="#inscri" className="text-red-400 hover:underline font-bold">Obtenir l&apos;Accès (4 500 DA)</Link></li>
             </ul>
           </div>
 
-          {/* Programs */}
+          {/* Offer Details */}
           <div>
-            <h4 className="font-extrabold text-white text-sm mb-4 tracking-wide">Formations en DA</h4>
-            <ul className="space-y-2.5 text-xs font-medium">
-              <li><span className="text-white font-bold">Chinois Débutant (HSK 1-2)</span> - 6 500 DA</li>
-              <li><span className="text-white font-bold">Mandarin Business</span> - 12 000 DA</li>
-              <li><span className="text-white font-bold">Préparation HSK 3-4</span> - 9 500 DA</li>
-              <li><span className="text-white font-bold">Coaching VIP 1-on-1</span> - 2 500 DA / h</li>
+            <h4 className="font-extrabold text-white text-sm mb-4 tracking-wide">Offre & Inclusions</h4>
+            <ul className="space-y-2 text-xs font-medium text-slate-300">
+              <li><span className="text-white font-bold">Pack Méthode Solo :</span> 4 500 DA</li>
+              <li><span className="text-emerald-400 font-bold">Paiement unique :</span> CCP & BaridiMob</li>
+              <li><span className="text-white font-bold">Durée :</span> Accès illimité à vie 24/7</li>
+              <li><span className="text-white font-bold">Support :</span> Suivi direct WhatsApp</li>
             </ul>
           </div>
 
@@ -73,7 +73,7 @@ export function Footer() {
                 href={`https://wa.me/${coachWhatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-slate-200 hover:text-emerald-400 transition-colors"
+                className="flex items-center gap-2.5 text-slate-300 hover:text-emerald-400 transition-colors"
               >
                 <MessageCircle className="w-4 h-4 text-emerald-400 fill-current" />
                 <span>WhatsApp : +213 550 00 00 00</span>
@@ -83,9 +83,9 @@ export function Footer() {
                 href="https://www.instagram.com/le_chinois_vite_et_bien_dz/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-slate-200 hover:text-[#FA4949] transition-colors"
+                className="flex items-center gap-2.5 text-slate-300 hover:text-red-400 transition-colors"
               >
-                <InstagramIcon className="w-4 h-4 text-[#FA4949]" />
+                <InstagramIcon className="w-4 h-4 text-red-400" />
                 <span>@le_chinois_vite_et_bien_dz</span>
               </a>
             </div>
@@ -94,10 +94,10 @@ export function Footer() {
         </div>
 
         {/* Bottom copyright */}
-        <div className="pt-8 border-t border-slate-800 text-center flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400 font-medium">
-          <p>&copy; {new Date().getFullYear()} Le Chinois Vite et Bien DZ. Tous droits réservés.</p>
+        <div className="pt-8 border-t border-slate-800/80 text-center flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 font-medium">
+          <p>&copy; {new Date().getFullYear()} Le Chinois Vite & Bien DZ. Tous droits réservés.</p>
           <p className="flex items-center gap-1.5">
-            Fait avec <Heart className="w-3.5 h-3.5 text-[#FA4949] fill-current" /> pour la communauté algérienne.
+            Conçu avec <Heart className="w-3.5 h-3.5 text-red-500 fill-current" /> pour la communauté algérienne.
           </p>
         </div>
 
@@ -107,4 +107,3 @@ export function Footer() {
 }
 
 export default Footer;
-
