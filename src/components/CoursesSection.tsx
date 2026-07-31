@@ -1,179 +1,125 @@
 "use client";
 
-import { Check, Sparkles, BookOpen, Briefcase, Award, Users } from "lucide-react";
-
-interface Course {
-  id: string;
-  badge: string;
-  title: string;
-  subtitle: string;
-  price: string;
-  period: string;
-  description: string;
-  features: string[];
-  icon: any;
-  highlighted?: boolean;
-}
-
-const COURSES: Course[] = [
-  {
-    id: "debutant",
-    badge: "HSK 1 - 2",
-    title: "Chinois Débutant Express",
-    subtitle: "Maîtrisez les bases du mandarin et la prononciation Pinyin.",
-    price: "6 500 DA",
-    period: "par niveau",
-    description: "Apprenez les dialogues de la vie quotidienne, la prononciation exacte (4 tons) et les premiers caractères essentiels.",
-    features: [
-      "Prononciation & Pinyin sans accent",
-      "Vocabulaire de conversation quotidienne",
-      "Exercices pratiques audio & vidéo",
-      "Support de cours PDF téléchargeables",
-      "Groupe de révision WhatsApp"
-    ],
-    icon: BookOpen
-  },
-  {
-    id: "business",
-    badge: "BUSINESS & IMPORT",
-    title: "Mandarin Business & Commerce",
-    subtitle: "Pour commerçants, importateurs et hommes d'affaires.",
-    price: "12 000 DA",
-    period: "formation intensive",
-    description: "Spécialement conçu pour négocier avec les fournisseurs chinois à Yiwu, Guangzhou ou Shanghai sans intermédiaire.",
-    features: [
-      "Vocabulaire commercial & négociation de prix",
-      "Vocabulaire de douane, livraison & usines",
-      "Formules de politesse et culture des affaires en Chine",
-      "Simulation de négociations réelles",
-      "Assistance directe du coach"
-    ],
-    icon: Briefcase,
-    highlighted: true
-  },
-  {
-    id: "hsk-avance",
-    badge: "HSK 3 - 4",
-    title: "Préparation Examens HSK",
-    subtitle: "Perfectionnement grammatical et caractères complexes.",
-    price: "9 500 DA",
-    period: "par niveau",
-    description: "Préparez la certification officielle HSK pour vos études en Chine ou opportunités professionnelles.",
-    features: [
-      "Lecture et écriture de 600+ sinogrammes",
-      "Grammaire avancée et structures de phrases",
-      "Simulations d'examens chronométrés",
-      "Correction personnalisée par le coach",
-      "Certification d'assiduité"
-    ],
-    icon: Award
-  },
-  {
-    id: "vip-coaching",
-    badge: "SUR-MESURE",
-    title: "Coaching VIP 1-on-1",
-    subtitle: "Accompagnement individuel personnalisé.",
-    price: "2 500 DA",
-    period: "par séance d'1h",
-    description: "Une heure exclusive en tête-à-tête avec le coach pour répondre à vos questions et accélérer votre niveau.",
-    features: [
-      "Horaires flexibles selon vos disponibilités",
-      "Programme 100% personnalisé à vos objectifs",
-      "Pratique orale intensive en direct",
-      "Feedback immédiat et exercices sur-mesure",
-      "Suivi quotidien WhatsApp"
-    ],
-    icon: Users
-  }
-];
+import { Video, FileText, CheckCircle2, RefreshCw, Infinity as InfinityIcon, Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
 
 export function CoursesSection() {
+  const coachWhatsappNumber = "213550000000";
+
+  const FEATURES = [
+    {
+      title: "Manuel complet avec vidéos HD",
+      desc: "Des explications détaillées pas à pas pour maîtriser la prononciation pinyin et les 4 tons sans difficulté.",
+      icon: Video,
+      badge: "Vidéos 4K"
+    },
+    {
+      title: "Exercices progressifs",
+      desc: "Pratiquez après chaque leçon avec des exercices interactifs pour fixer vos connaissances.",
+      icon: CheckCircle2,
+      badge: "Pratique"
+    },
+    {
+      title: "Carnet d'écriture (PDF)",
+      desc: "Fiches téléchargeables et imprimables pour apprendre à tracer les caractères chinois (Sinogrammes).",
+      icon: FileText,
+      badge: "PDF Imprimable"
+    },
+    {
+      title: "Accès à vie au contenu",
+      desc: "Étudiez sans pression à votre propre rythme, accessible 24/7 sur smartphone, tablette et ordinateur.",
+      icon: InfinityIcon,
+      badge: "À vie"
+    },
+    {
+      title: "Mises à jour gratuites",
+      desc: "Bénéficiez de tous les nouveaux modules, vidéos et exercices ajoutés au fil du temps sans surcoût.",
+      icon: RefreshCw,
+      badge: "Inclus"
+    }
+  ];
+
   return (
-    <section id="formations" className="py-20 bg-[#F8FAFC] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="formation" className="py-24 bg-white relative">
+      <div id="inclus" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 border border-red-100 text-[#FA4949] text-xs font-black uppercase tracking-wider mb-4">
-            Programmes & Tarifs
+            <Sparkles className="w-3.5 h-3.5" /> Programme Spécial &bull; Offre Unique
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-[#0A083B]">
-            Nos Formations en Mandarin (en DA) 🇩🇿
+          <h2 className="text-3xl sm:text-5xl font-black text-[#0A083B] tracking-tight leading-tight">
+            Méthode Solo <span className="text-[#FA4949] font-serif">(自学)</span>
           </h2>
-          <p className="mt-4 text-slate-600 text-base font-normal">
-            Des programmes adaptés à votre rythme et vos objectifs. Choisissez la formule qui vous convient et réservez directement avec le coach.
+          <p className="mt-4 text-slate-600 text-base sm:text-lg max-w-2xl mx-auto font-normal leading-relaxed">
+            Tout ce dont vous avez besoin pour apprendre le mandarin efficacement depuis l&apos;Algérie, réuni dans un seul pack complet et accessible.
           </p>
         </div>
 
-        {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {COURSES.map((course) => {
-            const Icon = course.icon;
-            return (
-              <div
-                key={course.id}
-                className={`bg-white rounded-3xl p-7 flex flex-col justify-between relative transition-all duration-300 border shadow-md hover:shadow-xl ${
-                  course.highlighted
-                    ? "border-[#FA4949] ring-2 ring-[#FA4949]/20 scale-[1.02] bg-gradient-to-b from-red-50/30 to-white"
-                    : "border-slate-200"
-                }`}
-              >
-                {course.highlighted && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#FA4949] text-white text-[11px] font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-md">
-                    <Sparkles className="w-3.5 h-3.5" /> Recommandé Business
-                  </div>
-                )}
+        {/* Master Offer Card (Centered Focal Point) */}
+        <div className="bg-[#F8FAFC] rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-xl mb-16 relative overflow-hidden">
+          
+          {/* Top Banner inside Card */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-200 pb-8 mb-10">
+            <div>
+              <span className="text-xs font-black uppercase tracking-wider text-[#FA4949] bg-white px-3.5 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                Formule Complète Autonome
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-black text-[#0A083B] mt-3">
+                Pack Apprentissage Autonome
+              </h3>
+              <p className="text-sm text-slate-500 font-medium mt-1">
+                Conçu pour avancer à votre propre rythme sans contraintes de temps.
+              </p>
+            </div>
 
-                <div>
-                  {/* Badge & Icon */}
-                  <div className="flex items-center justify-between mb-5">
-                    <span className="text-[11px] font-extrabold tracking-wider px-3 py-1 rounded-full bg-slate-100 text-[#0A083B] border border-slate-200">
-                      {course.badge}
-                    </span>
-                    <div className="w-10 h-10 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-[#FA4949]">
+            {/* Big Price Tag */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-md text-center md:text-right shrink-0">
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Tarif Unique</div>
+              <div className="flex items-baseline justify-center md:justify-end gap-2">
+                <span className="text-4xl sm:text-5xl font-black text-[#FA4949]">4 500 DA</span>
+              </div>
+              <div className="text-xs font-extrabold text-emerald-600 mt-1">Accès à vie &bull; Zéro frais cachés</div>
+            </div>
+          </div>
+
+          {/* 5 Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            {FEATURES.map((feat, idx) => {
+              const Icon = feat.icon;
+              return (
+                <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-all">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-[#FA4949]">
                       <Icon className="w-5 h-5" />
                     </div>
+                    <span className="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                      {feat.badge}
+                    </span>
                   </div>
-
-                  {/* Title & Subtitle */}
-                  <h3 className="text-xl font-black text-[#0A083B] mb-2">{course.title}</h3>
-                  <p className="text-xs text-slate-500 font-medium mb-6 leading-relaxed">{course.subtitle}</p>
-
-                  {/* Price */}
-                  <div className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl sm:text-3xl font-black text-[#FA4949]">
-                        {course.price}
-                      </span>
-                      <span className="text-xs text-slate-500 font-bold">{course.period}</span>
-                    </div>
-                  </div>
-
-                  {/* Feature list */}
-                  <ul className="space-y-3 mb-8">
-                    {course.features.map((feat, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 font-medium">
-                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <h4 className="text-base font-extrabold text-[#0A083B] mb-2">{feat.title}</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed font-normal">{feat.desc}</p>
                 </div>
+              );
+            })}
+          </div>
 
-                {/* CTA */}
-                <a
-                  href="#reservation"
-                  className={`w-full py-3.5 rounded-full font-bold text-xs sm:text-sm text-center transition-all flex items-center justify-center gap-2 ${
-                    course.highlighted
-                      ? "btn-primary"
-                      : "btn-secondary"
-                  }`}
-                >
-                  S&apos;inscrire à cette formule
-                </a>
-              </div>
-            );
-          })}
+          {/* Master CTA Bar */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+            <div className="flex items-center gap-3 text-xs text-slate-600 font-semibold">
+              <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
+              <span>Paiement sécurisé par CCP, BaridiMob ou directement sur WhatsApp.</span>
+            </div>
+
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <a
+                href="#inscription"
+                className="w-full sm:w-auto btn-primary px-8 py-4 text-sm font-extrabold flex items-center justify-center gap-2 shadow-md hover:scale-[1.02] transition"
+              >
+                Obtenir l&apos;accès à 4 500 DA <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+
         </div>
 
       </div>

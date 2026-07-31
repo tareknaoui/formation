@@ -33,19 +33,16 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Nav Items */}
-          <nav className="hidden lg:flex items-center gap-7 text-sm font-semibold">
-            <Link href="/" className="text-slate-700 hover:text-[#FA4949] transition-colors">
-              Accueil
+          <nav className="hidden lg:flex items-center gap-8 text-sm font-bold">
+            <Link href="#formation" className="text-slate-700 hover:text-[#FA4949] transition-colors">
+              Méthode Solo
             </Link>
-            <Link href="/#formations" className="text-slate-700 hover:text-[#FA4949] transition-colors">
-              Formations & Tarifs
+            <Link href="#inclus" className="text-slate-700 hover:text-[#FA4949] transition-colors">
+              Ce qui est inclus
             </Link>
-            <Link href="/#methode" className="text-slate-700 hover:text-[#FA4949] transition-colors">
-              La Méthode
-            </Link>
-            <Link href="/#reservation" className="text-[#FA4949] hover:underline flex items-center gap-1.5 font-bold">
+            <Link href="#inscription" className="text-[#FA4949] hover:underline flex items-center gap-1.5 font-black">
               <Sparkles className="w-4 h-4" />
-              Réserver un essai
+              Rejoindre pour 4 500 DA
             </Link>
           </nav>
 
@@ -143,32 +140,25 @@ export function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-b border-slate-200 px-5 pt-4 pb-6 space-y-3 shadow-lg">
           <Link
-            href="/"
+            href="#formation"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-4 py-2.5 rounded-xl text-base font-bold text-[#0A083B] hover:bg-slate-50"
+          >
+            Méthode Solo (自学)
+          </Link>
+          <Link
+            href="#inclus"
             onClick={() => setMobileMenuOpen(false)}
             className="block px-4 py-2.5 rounded-xl text-base font-semibold text-[#0A083B] hover:bg-slate-50"
           >
-            Accueil
+            Ce qui est inclus
           </Link>
           <Link
-            href="/#formations"
+            href="#inscription"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-4 py-2.5 rounded-xl text-base font-semibold text-[#FA4949] hover:bg-slate-50"
+            className="block px-4 py-2.5 rounded-xl text-base font-black text-[#FA4949] hover:bg-red-50"
           >
-            Formations & Tarifs (DA)
-          </Link>
-          <Link
-            href="/#methode"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-4 py-2.5 rounded-xl text-base font-semibold text-[#0A083B] hover:bg-slate-50"
-          >
-            La Méthode
-          </Link>
-          <Link
-            href="/#reservation"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-4 py-2.5 rounded-xl text-base font-bold text-[#FA4949] hover:bg-red-50"
-          >
-            Réserver un essai
+            Obtenir l&apos;Accès (4 500 DA)
           </Link>
 
           <div className="pt-4 border-t border-slate-100 space-y-3">

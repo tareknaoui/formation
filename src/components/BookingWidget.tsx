@@ -1,72 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar as CalendarIcon, Clock, MessageCircle, User, Phone, Target, Sparkles } from "lucide-react";
-
-interface Formule {
-  id: string;
-  name: string;
-  price: string;
-  description: string;
-  popular?: boolean;
-}
-
-const FORMULES: Formule[] = [
-  {
-    id: "decouverte",
-    name: "Session Découverte (30 min)",
-    price: "OFFERT",
-    description: "Évaluation de niveau + conseils personnalisés pour bien démarrer.",
-  },
-  {
-    id: "coaching-1on1",
-    name: "Coaching Individuel 1-on-1 (1h)",
-    price: "2 500 DA",
-    description: "Séance sur-mesure avec le coach (Prononciation, Pinyin ou Business).",
-    popular: true,
-  },
-  {
-    id: "hsk-mensuel",
-    name: "Pack Formation HSK (Mensuel)",
-    price: "8 000 DA",
-    description: "Cours structurés, supports de cours PDF et accompagnement WhatsApp.",
-  },
-  {
-    id: "business-express",
-    name: "Mandarin Business & Importation",
-    price: "12 000 DA",
-    description: "Vocabulaire commercial, négociation avec les fournisseurs chinois et usines.",
-  },
-];
-
-const CRENEAUX = [
-  "10:00 - 11:00",
-  "14:00 - 15:00",
-  "16:30 - 17:30",
-  "19:00 - 20:00",
-  "20:30 - 21:30"
-];
+import { MessageCircle, User, Phone, MapPin, Sparkles, CheckCircle } from "lucide-react";
 
 export function BookingWidget() {
-  const [selectedFormule, setSelectedFormule] = useState<Formule>(FORMULES[1]);
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date(Date.now() + 86400000).toISOString().split("T")[0]
-  );
-  const [selectedSlot, setSelectedSlot] = useState<string>(CRENEAUX[1]);
-  
-  // User contact state
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [objective, setObjective] = useState("Business & Commerce");
+  const [wilaya, setWilaya] = useState("");
 
   const coachWhatsappNumber = "213550000000";
 
-  const handleBookingSubmit = (e: React.FormEvent) => {
+  const handleOrderSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName || !phone) return;
 
     const message = encodeURIComponent(
-      `Bonjour Coach !\nJe souhaite valider ma réservation :\n\n📌 *Formule* : ${selectedFormule.name}\n💰 *Tarif* : ${selectedFormule.price}\n📅 *Date* : ${selectedDate}\n⏰ *Horaire* : ${selectedSlot}\n👤 *Nom* : ${fullName}\n📱 *Téléphone* : ${phone}\n🎯 *Objectif* : ${objective}\n\nMerci de me contacter pour finaliser l'inscription !`
+      `Bonjour Coach !\nJe souhaite commander la *Méthode Solo (4 500 DA à vie)*.\n\n👤 *Nom* : ${fullName}\n📱 *Téléphone* : ${phone}\n📍 *Wilaya* : ${wilaya || "Non spécifiée"}\n\nMerci de m'envoyer les accès et les modalités de paiement (CCP / BaridiMob) !`
     );
 
     setTimeout(() => {
@@ -75,182 +24,104 @@ export function BookingWidget() {
   };
 
   return (
-    <section id="reservation" className="py-20 bg-[#F8FAFC] relative">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+    <section id="inscription" className="py-20 bg-[#F8FAFC] relative">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
         
         {/* Section Title */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-black uppercase tracking-wider mb-4">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 border border-red-100 text-[#FA4949] text-xs font-black uppercase tracking-wider mb-4">
             <Sparkles className="w-3.5 h-3.5" />
-            Réservation Directe
+            Accès Immédiat
           </div>
           <h2 className="text-3xl sm:text-4xl font-black text-[#0A083B]">
-            Réservez votre séance avec le Coach 🇩🇿
+            Rejoignez la Méthode Solo (4 500 DA)
           </h2>
-          <p className="mt-3 text-slate-600 max-w-xl mx-auto text-sm sm:text-base font-normal">
-            Choisissez votre formule, votre créneau, et finalisez votre inscription en contactant le coach directement sur WhatsApp.
+          <p className="mt-3 text-slate-600 text-sm sm:text-base font-normal">
+            Remplissez vos coordonnées pour recevoir votre accès instantané et les informations de paiement (BaridiMob / CCP).
           </p>
         </div>
 
-        {/* Booking Card */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl relative">
+        {/* Order Card */}
+        <div className="bg-white rounded-3xl p-7 sm:p-10 border border-slate-200 shadow-xl relative">
           
-          <form onSubmit={handleBookingSubmit} className="space-y-8">
-            
-            {/* Step 1: Choix de la formule */}
+          {/* Order Summary Box */}
+          <div className="bg-[#F8FAFC] rounded-2xl p-5 border border-slate-200 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <label className="block text-sm font-extrabold text-[#0A083B] mb-3 flex items-center gap-2.5">
-                <span className="w-6 h-6 rounded-full bg-[#FA4949] text-white text-xs font-bold flex items-center justify-center">1</span>
-                Choisissez votre formule (Tarifs en DA)
-              </label>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {FORMULES.map((f) => {
-                  const isSelected = selectedFormule.id === f.id;
-                  return (
-                    <div
-                      key={f.id}
-                      onClick={() => setSelectedFormule(f)}
-                      className={`cursor-pointer rounded-2xl p-4.5 transition-all border relative ${
-                        isSelected
-                          ? "bg-red-50/30 border-[#FA4949] ring-2 ring-[#FA4949]/20 shadow-md"
-                          : "bg-white border-slate-200 hover:border-slate-300"
-                      }`}
-                    >
-                      {f.popular && (
-                        <span className="absolute -top-2.5 right-3 bg-[#FA4949] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                          POPULAIRE
-                        </span>
-                      )}
-                      <div className="flex justify-between items-start mb-1.5">
-                        <h4 className="font-extrabold text-[#0A083B] text-sm">{f.name}</h4>
-                        <span className="text-sm font-black text-[#FA4949] bg-red-50 px-2.5 py-0.5 rounded-full border border-red-100">
-                          {f.price}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-500 font-medium leading-relaxed">{f.description}</p>
-                    </div>
-                  );
-                })}
-              </div>
+              <span className="text-xs font-bold text-slate-500 uppercase">Récapitulatif</span>
+              <h4 className="font-extrabold text-[#0A083B] text-base">Méthode Solo &bull; Accès à vie</h4>
+              <p className="text-xs text-slate-500 font-medium">Manuel Vidéo HD + Exercices + PDF imprimables</p>
             </div>
+            <div className="text-right shrink-0">
+              <span className="text-2xl font-black text-[#FA4949]">4 500 DA</span>
+              <span className="block text-[10px] font-bold text-emerald-600">Paiement unique</span>
+            </div>
+          </div>
 
-            {/* Step 2: Date & Horaire */}
-            <div>
-              <label className="block text-sm font-extrabold text-[#0A083B] mb-3 flex items-center gap-2.5">
-                <span className="w-6 h-6 rounded-full bg-[#FA4949] text-white text-xs font-bold flex items-center justify-center">2</span>
-                Date et Créneau disponible
-              </label>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <span className="text-xs text-slate-500 font-bold block mb-1.5 flex items-center gap-1.5">
-                    <CalendarIcon className="w-3.5 h-3.5 text-[#FA4949]" /> Date souhaitée
-                  </span>
+          <form onSubmit={handleOrderSubmit} className="space-y-6">
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-xs font-bold text-[#0A083B] mb-2">Nom et Prénom *</label>
+                <div className="relative">
+                  <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                   <input
-                    type="date"
-                    min={new Date().toISOString().split("T")[0]}
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm text-[#0A083B] font-medium focus:outline-none focus:border-[#FA4949] focus:bg-white"
+                    type="text"
+                    placeholder="Ex: Mohamed Ali"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-3 text-sm text-[#0A083B] font-medium focus:outline-none focus:border-[#FA4949] focus:bg-white"
                     required
                   />
                 </div>
+              </div>
 
-                <div>
-                  <span className="text-xs text-slate-500 font-bold block mb-1.5 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-emerald-600" /> Heure disponible
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {CRENEAUX.map((slot) => (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => setSelectedSlot(slot)}
-                        className={`text-xs px-3.5 py-2.5 rounded-xl font-bold border transition-all ${
-                          selectedSlot === slot
-                            ? "bg-[#0A083B] text-white border-[#0A083B]"
-                            : "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-300"
-                        }`}
-                      >
-                        {slot}
-                      </button>
-                    ))}
-                  </div>
+              <div>
+                <label className="block text-xs font-bold text-[#0A083B] mb-2">Numéro WhatsApp *</label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <input
+                    type="tel"
+                    placeholder="Ex: 0555 12 34 56"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-3 text-sm text-[#0A083B] font-medium focus:outline-none focus:border-[#FA4949] focus:bg-white"
+                    required
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Step 3: Coordonnées de l'élève */}
             <div>
-              <label className="block text-sm font-extrabold text-[#0A083B] mb-3 flex items-center gap-2.5">
-                <span className="w-6 h-6 rounded-full bg-[#FA4949] text-white text-xs font-bold flex items-center justify-center">3</span>
-                Vos Coordonnées
-              </label>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <span className="text-xs text-slate-500 font-bold block mb-1.5">Nom complet</span>
-                  <div className="relative">
-                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-                    <input
-                      type="text"
-                      placeholder="Ex: Mohamed Ali"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-3.5 py-3 text-sm text-[#0A083B] font-medium focus:outline-none focus:border-[#FA4949] focus:bg-white"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <span className="text-xs text-slate-500 font-bold block mb-1.5">Numéro WhatsApp</span>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-                    <input
-                      type="tel"
-                      placeholder="Ex: 0555 12 34 56"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-3.5 py-3 text-sm text-[#0A083B] font-medium focus:outline-none focus:border-[#FA4949] focus:bg-white"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <span className="text-xs text-slate-500 font-bold block mb-1.5">Objectif principal</span>
-                  <div className="relative">
-                    <Target className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-                    <select
-                      value={objective}
-                      onChange={(e) => setObjective(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-3.5 py-3 text-sm text-[#0A083B] font-medium focus:outline-none focus:border-[#FA4949] focus:bg-white appearance-none"
-                    >
-                      <option value="Business & Commerce">Business & Commerce</option>
-                      <option value="Préparation HSK">Préparation HSK</option>
-                      <option value="Voyage / Études">Voyage / Études</option>
-                      <option value="Débutant Curieux">Débutant Curieux</option>
-                    </select>
-                  </div>
-                </div>
+              <label className="block text-xs font-bold text-[#0A083B] mb-2">Wilaya (Optionnel)</label>
+              <div className="relative">
+                <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <input
+                  type="text"
+                  placeholder="Ex: Alger, Oran, Sétif..."
+                  value={wilaya}
+                  onChange={(e) => setWilaya(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-3 text-sm text-[#0A083B] font-medium focus:outline-none focus:border-[#FA4949] focus:bg-white"
+                />
               </div>
             </div>
 
-            {/* Submit Button & Disclaimer */}
-            <div className="pt-4 border-t border-slate-100">
+            <div className="pt-2">
               <button
                 type="submit"
-                className="w-full btn-primary py-4 text-base font-extrabold flex items-center justify-center gap-3 shadow-lg hover:scale-[1.01]"
+                className="w-full btn-primary py-4 text-base font-extrabold flex items-center justify-center gap-3 shadow-lg hover:scale-[1.01] transition-transform"
               >
-                <MessageCircle className="w-6 h-6 fill-current" />
-                Réserver & Finaliser le Paiement avec le Coach
+                <MessageCircle className="w-5 h-5 fill-current" />
+                Commander ma formation (4 500 DA)
               </button>
-              
-              <p className="text-center text-xs text-slate-500 mt-3 font-medium">
-                * En cliquant, vous serez redirigé directement vers le WhatsApp officiel du coach avec vos détails pré-remplis pour fixer le paiement et la confirmation.
-              </p>
+
+              <div className="flex items-center justify-center gap-4 text-[11px] text-slate-500 font-semibold mt-4">
+                <span className="flex items-center gap-1">
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Validation sur WhatsApp
+                </span>
+                <span className="flex items-center gap-1">
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> CCP / BaridiMob
+                </span>
+              </div>
             </div>
 
           </form>
